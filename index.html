@@ -131,7 +131,7 @@ main{padding:20px 16px 80px;max-width:960px;margin:0 auto;}
 .admin-inputs input{width:50px;height:34px;background:var(--azul-escuro);border:1px solid var(--borda);color:var(--texto);font-size:.95rem;font-weight:700;text-align:center;border-radius:6px;outline:none;font-family:'Inter',sans-serif;-moz-appearance:textfield;}
 .admin-inputs input::-webkit-outer-spin-button,.admin-inputs input::-webkit-inner-spin-button{-webkit-appearance:none;}
 .admin-inputs input:focus{border-color:var(--amarelo);}
-.btn-admin-save{background:var(--amarelo);color:var(--azul-escuro);font-weight:700;font-size:.8rem;padding:7px 13px;border:none;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;}
+.btn-admin-save{background:var(--amarelo);color:var(--azul-escuro);font-weight:700;font-size:.8rem;padding:7px 13px;border:none;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;}.btn-admin-clear{background:none;color:var(--vermelho);font-weight:600;font-size:.78rem;padding:6px 10px;border:1px solid var(--vermelho);border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;}
 .status-admin{font-size:.77rem;color:var(--verde-claro);}
 
 /* PALPITES VIEW (admin) */
@@ -905,6 +905,7 @@ function renderAdminResultados() {
       html+='<span style="color:var(--texto-dim);font-weight:700;padding:0 3px;">x</span>';
       html+='<input type="number" min="0" max="20" placeholder="?" value="'+(r.g2!==''?r.g2:'')+'" id="ar_'+jogo.id+'_g2"/>';
       html+='<button class="btn-admin-save" onclick="salvarResultadoLocal(\''+jogo.id+'\')">✅ Salvar</button>';
+      html+='<button class="btn-admin-clear" onclick="limparResultado(\''+jogo.id+'\')">🗑️ Limpar</button>';
       html+='<span id="adm_st_'+jogo.id+'" class="status-admin">'+(r.g1!==''?'Salvo: '+r.g1+' x '+r.g2:'')+'</span>';
       html+='</div></div>';
     });
@@ -921,6 +922,18 @@ function salvarResultadoLocal(jogoId) {
   localStorage.setItem('bolao26_resultados', JSON.stringify(resultadosCache));
   document.getElementById('adm_st_'+jogoId).textContent='Salvo: '+g1+' x '+g2;
   showToast('✅ Resultado salvo!');
+}
+
+function limparResultado(jogoId) {
+  if(!resultadosCache[jogoId]||resultadosCache[jogoId].g1==='') {
+    showToast('⚠️ Nenhum resultado para limpar.',true); return;
+  }
+  delete resultadosCache[jogoId];
+  localStorage.setItem('bolao26_resultados', JSON.stringify(resultadosCache));
+  document.getElementById('ar_'+jogoId+'_g1').value='';
+  document.getElementById('ar_'+jogoId+'_g2').value='';
+  document.getElementById('adm_st_'+jogoId).textContent='';
+  showToast('🗑️ Resultado removido!');
 }
 
 // ================================================================
