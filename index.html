@@ -192,6 +192,10 @@ main{padding:20px 16px 80px;max-width:960px;margin:0 auto;}
       <label>Usuário</label>
       <input type="text" id="loginSelect" placeholder="Digite seu login" autocomplete="off" autocapitalize="none" spellcheck="false"/>
     </div>
+    <div class="input-group" style="margin-top:4px;">
+      <label>Senha</label>
+      <input type="password" id="loginSenha" placeholder="••••••" autocomplete="off"/>
+    </div>
     <div id="loginErro" style="color:#e53935;font-size:.8rem;margin:-8px 0 10px;min-height:18px;"></div>
     <button class="btn-primary" id="btnEntrar">ENTRAR NO BOLÃO ⚽</button>
     <div style="margin-top:16px;border-top:1px solid var(--borda);padding-top:14px;">
@@ -285,14 +289,16 @@ main{padding:20px 16px 80px;max-width:960px;margin:0 auto;}
 // ================================================================
 // CONFIGURAÇÃO — EDITE AQUI
 // ================================================================
-var LOGINS = [
-  'j.oliveira',
-  'w.santos',
-  'l.melgaco',
-  'd.rodrigues',
-  'm.medeiros'
-  // Adicione mais usuários aqui
-];
+var USUARIOS = {
+  'j.oliveira':  'jeff10',
+  'w.santos':    'deizin6',
+  'l.melgaco':   'luc2026',
+  'd.rodrigues': 'dudex26',
+  'm.medeiros':  'miller2026'
+  // Adicione mais: 'login': 'senha'
+};
+// Lista derivada para uso interno
+var LOGINS = Object.keys(USUARIOS);
 
 var ADMIN_SENHA = '1ateoito'; // Mude para sua senha preferida
 var CRYPTO_KEY  = 'BrasilHexa';   // Chave de criptografia
@@ -485,20 +491,28 @@ window.addEventListener('load', function() {
 // ================================================================
 document.getElementById('btnEntrar').addEventListener('click', entrar);
 document.getElementById('loginSelect').addEventListener('keydown', function(e){ if(e.key==='Enter') entrar(); });
+document.getElementById('loginSenha').addEventListener('keydown', function(e){ if(e.key==='Enter') entrar(); });
 
 function entrar() {
-  var campo = document.getElementById('loginSelect');
-  var login = campo.value.trim().toLowerCase();
+  var campoLogin = document.getElementById('loginSelect');
+  var campoSenha = document.getElementById('loginSenha');
+  var login = campoLogin.value.trim().toLowerCase();
+  var senha = campoSenha.value;
   var erroEl = document.getElementById('loginErro');
   erroEl.textContent = '';
 
   if (!login) {
     erroEl.textContent = '⚠️ Digite seu login.';
-    campo.focus();
+    campoLogin.focus();
+    return;
+  }
+  if (!senha) {
+    erroEl.textContent = '⚠️ Digite sua senha.';
+    campoSenha.focus();
     return;
   }
 
-  // Valida contra a lista (case-insensitive)
+  // Valida login (case-insensitive)
   var loginValido = null;
   for (var i = 0; i < LOGINS.length; i++) {
     if (LOGINS[i].toLowerCase() === login) {
@@ -508,8 +522,16 @@ function entrar() {
   }
 
   if (!loginValido) {
-    erroEl.textContent = '❌ Login não encontrado. Tente novamente.';
-    campo.select();
+    erroEl.textContent = '❌ Usuário ou senha incorretos.';
+    campoLogin.select();
+    return;
+  }
+
+  // Valida senha
+  if (USUARIOS[loginValido] !== senha) {
+    erroEl.textContent = '❌ Usuário ou senha incorretos.';
+    campoSenha.value = '';
+    campoSenha.focus();
     return;
   }
 
@@ -517,7 +539,8 @@ function entrar() {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('appScreen').style.display = 'block';
   document.getElementById('userBadgeName').textContent = loginValido;
-  campo.value = '';
+  campoLogin.value = '';
+  campoSenha.value = '';
   // Carrega palpites do cache local
   var cached = localStorage.getItem('bolao26_palpites_' + loginValido);
   if (cached) { try { palpitesCache[loginValido] = JSON.parse(cached); } catch(e){} }
