@@ -71,7 +71,7 @@ main{padding:20px 16px 80px;max-width:960px;margin:0 auto;}
 .confronto{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;}
 .time-bloco{display:flex;align-items:center;gap:5px;}
 .time-bloco.direita{flex-direction:row-reverse;}
-.flag{font-size:1.25rem;line-height:1;flex-shrink:0;}
+.flag{width:28px;height:21px;object-fit:cover;border-radius:2px;flex-shrink:0;display:inline-block;vertical-align:middle;}.flag-sm{width:22px;height:16px;object-fit:cover;border-radius:2px;vertical-align:middle;margin-right:2px;}
 .time-nome-txt{font-weight:600;font-size:.86rem;line-height:1.2;}
 .placar-area{display:flex;align-items:center;gap:5px;justify-content:center;}
 .placar-input{width:44px;height:36px;background:var(--azul-escuro);border:2px solid var(--borda);color:var(--texto);font-size:1.05rem;font-weight:700;text-align:center;border-radius:6px;outline:none;transition:border-color .2s;font-family:'Inter',sans-serif;-moz-appearance:textfield;}
@@ -304,78 +304,78 @@ var GAS_URL = 'https://script.google.com/macros/s/AKfycbw45pT5zd9fvgow3IAmsM3e01
 // JOGOS — 48 partidas Copa 2026 (horário Brasília)
 // ================================================================
 var JOGOS = [
-  {id:'A1',grupo:'A',rodada:1,data:'2026-06-11',hora:'16:00',f1:'🇲🇽',t1:'México',f2:'🇿🇦',t2:'África do Sul',cidade:'Cidade do México'},
-  {id:'A2',grupo:'A',rodada:1,data:'2026-06-11',hora:'23:00',f1:'🇰🇷',t1:'Coreia do Sul',f2:'🇨🇿',t2:'Rep. Tcheca',cidade:'Guadalajara'},
-  {id:'B1',grupo:'B',rodada:1,data:'2026-06-12',hora:'16:00',f1:'🇨🇦',t1:'Canadá',f2:'🇧🇦',t2:'Bósnia e Herz.',cidade:'Toronto'},
-  {id:'D1',grupo:'D',rodada:1,data:'2026-06-12',hora:'22:00',f1:'🇺🇸',t1:'Estados Unidos',f2:'🇵🇾',t2:'Paraguai',cidade:'Los Angeles'},
-  {id:'D2',grupo:'D',rodada:1,data:'2026-06-13',hora:'01:00',f1:'🇦🇺',t1:'Austrália',f2:'🇹🇷',t2:'Turquia',cidade:'Vancouver'},
-  {id:'B2',grupo:'B',rodada:1,data:'2026-06-13',hora:'16:00',f1:'🇶🇦',t1:'Catar',f2:'🇨🇭',t2:'Suíça',cidade:'San Francisco'},
-  {id:'C1',grupo:'C',rodada:1,data:'2026-06-13',hora:'19:00',f1:'🇧🇷',t1:'Brasil',f2:'🇲🇦',t2:'Marrocos',cidade:'Nova York/NJ'},
-  {id:'C2',grupo:'C',rodada:1,data:'2026-06-13',hora:'22:00',f1:'🇭🇹',t1:'Haiti',f2:'🏴󠁧󠁢󠁳󠁣󠁴󠁿',t2:'Escócia',cidade:'Boston'},
-  {id:'E1',grupo:'E',rodada:1,data:'2026-06-14',hora:'14:00',f1:'🇩🇪',t1:'Alemanha',f2:'🇨🇼',t2:'Curaçao',cidade:'Houston'},
-  {id:'F1',grupo:'F',rodada:1,data:'2026-06-14',hora:'17:00',f1:'🇳🇱',t1:'Holanda',f2:'🇯🇵',t2:'Japão',cidade:'Dallas'},
-  {id:'E2',grupo:'E',rodada:1,data:'2026-06-14',hora:'20:00',f1:'🇨🇮',t1:'Costa do Marfim',f2:'🇪🇨',t2:'Equador',cidade:'Filadélfia'},
-  {id:'F2',grupo:'F',rodada:1,data:'2026-06-14',hora:'23:00',f1:'🇸🇪',t1:'Suécia',f2:'🇹🇳',t2:'Tunísia',cidade:'Monterrey'},
-  {id:'H1',grupo:'H',rodada:1,data:'2026-06-15',hora:'13:00',f1:'🇪🇸',t1:'Espanha',f2:'🇨🇻',t2:'Cabo Verde',cidade:'Atlanta'},
-  {id:'G1',grupo:'G',rodada:1,data:'2026-06-15',hora:'16:00',f1:'🇧🇪',t1:'Bélgica',f2:'🇪🇬',t2:'Egito',cidade:'Seattle'},
-  {id:'H2',grupo:'H',rodada:1,data:'2026-06-15',hora:'19:00',f1:'🇸🇦',t1:'Arábia Saudita',f2:'🇺🇾',t2:'Uruguai',cidade:'Miami'},
-  {id:'G2',grupo:'G',rodada:1,data:'2026-06-15',hora:'22:00',f1:'🇮🇷',t1:'Irã',f2:'🇳🇿',t2:'Nova Zelândia',cidade:'Los Angeles'},
-  {id:'J1',grupo:'J',rodada:1,data:'2026-06-16',hora:'14:00',f1:'🇦🇷',t1:'Argentina',f2:'🇩🇿',t2:'Argélia',cidade:'Kansas City'},
-  {id:'I1',grupo:'I',rodada:1,data:'2026-06-16',hora:'16:00',f1:'🇫🇷',t1:'França',f2:'🇸🇳',t2:'Senegal',cidade:'Nova York/NJ'},
-  {id:'I2',grupo:'I',rodada:1,data:'2026-06-16',hora:'19:00',f1:'🇮🇶',t1:'Iraque',f2:'🇳🇴',t2:'Noruega',cidade:'Boston'},
-  {id:'J2',grupo:'J',rodada:1,data:'2026-06-17',hora:'01:00',f1:'🇦🇹',t1:'Áustria',f2:'🇯🇴',t2:'Jordânia',cidade:'San Francisco'},
-  {id:'K1',grupo:'K',rodada:1,data:'2026-06-17',hora:'14:00',f1:'🇵🇹',t1:'Portugal',f2:'🇨🇩',t2:'RD Congo',cidade:'Houston'},
-  {id:'L1',grupo:'L',rodada:1,data:'2026-06-17',hora:'17:00',f1:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',t1:'Inglaterra',f2:'🇭🇷',t2:'Croácia',cidade:'Dallas'},
-  {id:'L2',grupo:'L',rodada:1,data:'2026-06-17',hora:'20:00',f1:'🇬🇭',t1:'Gana',f2:'🇵🇦',t2:'Panamá',cidade:'Toronto'},
-  {id:'K2',grupo:'K',rodada:1,data:'2026-06-17',hora:'23:00',f1:'🇺🇿',t1:'Uzbequistão',f2:'🇨🇴',t2:'Colômbia',cidade:'Cidade do México'},
-  {id:'A3',grupo:'A',rodada:2,data:'2026-06-18',hora:'13:00',f1:'🇨🇿',t1:'Rep. Tcheca',f2:'🇿🇦',t2:'África do Sul',cidade:'Atlanta'},
-  {id:'B3',grupo:'B',rodada:2,data:'2026-06-18',hora:'16:00',f1:'🇨🇭',t1:'Suíça',f2:'🇧🇦',t2:'Bósnia e Herz.',cidade:'Los Angeles'},
-  {id:'B4',grupo:'B',rodada:2,data:'2026-06-18',hora:'19:00',f1:'🇨🇦',t1:'Canadá',f2:'🇶🇦',t2:'Catar',cidade:'Vancouver'},
-  {id:'A4',grupo:'A',rodada:2,data:'2026-06-18',hora:'22:00',f1:'🇲🇽',t1:'México',f2:'🇰🇷',t2:'Coreia do Sul',cidade:'Guadalajara'},
-  {id:'D3',grupo:'D',rodada:2,data:'2026-06-19',hora:'01:00',f1:'🇹🇷',t1:'Turquia',f2:'🇵🇾',t2:'Paraguai',cidade:'San Francisco'},
-  {id:'D4',grupo:'D',rodada:2,data:'2026-06-19',hora:'16:00',f1:'🇺🇸',t1:'Estados Unidos',f2:'🇦🇺',t2:'Austrália',cidade:'Seattle'},
-  {id:'C3',grupo:'C',rodada:2,data:'2026-06-19',hora:'19:00',f1:'🏴󠁧󠁢󠁳󠁣󠁴󠁿',t1:'Escócia',f2:'🇲🇦',t2:'Marrocos',cidade:'Boston'},
-  {id:'C4',grupo:'C',rodada:2,data:'2026-06-19',hora:'22:00',f1:'🇧🇷',t1:'Brasil',f2:'🇭🇹',t2:'Haiti',cidade:'Filadélfia'},
-  {id:'F3',grupo:'F',rodada:2,data:'2026-06-20',hora:'14:00',f1:'🇳🇱',t1:'Holanda',f2:'🇸🇪',t2:'Suécia',cidade:'Houston'},
-  {id:'E3',grupo:'E',rodada:2,data:'2026-06-20',hora:'17:00',f1:'🇩🇪',t1:'Alemanha',f2:'🇨🇮',t2:'Costa do Marfim',cidade:'Toronto'},
-  {id:'E4',grupo:'E',rodada:2,data:'2026-06-20',hora:'21:00',f1:'🇪🇨',t1:'Equador',f2:'🇨🇼',t2:'Curaçao',cidade:'Kansas City'},
-  {id:'F4',grupo:'F',rodada:2,data:'2026-06-21',hora:'01:00',f1:'🇹🇳',t1:'Tunísia',f2:'🇯🇵',t2:'Japão',cidade:'Monterrey'},
-  {id:'H3',grupo:'H',rodada:2,data:'2026-06-21',hora:'13:00',f1:'🇪🇸',t1:'Espanha',f2:'🇸🇦',t2:'Arábia Saudita',cidade:'Atlanta'},
-  {id:'G3',grupo:'G',rodada:2,data:'2026-06-21',hora:'16:00',f1:'🇧🇪',t1:'Bélgica',f2:'🇮🇷',t2:'Irã',cidade:'Los Angeles'},
-  {id:'H4',grupo:'H',rodada:2,data:'2026-06-21',hora:'19:00',f1:'🇺🇾',t1:'Uruguai',f2:'🇨🇻',t2:'Cabo Verde',cidade:'Miami'},
-  {id:'G4',grupo:'G',rodada:2,data:'2026-06-21',hora:'22:00',f1:'🇳🇿',t1:'Nova Zelândia',f2:'🇪🇬',t2:'Egito',cidade:'Vancouver'},
-  {id:'J3',grupo:'J',rodada:2,data:'2026-06-22',hora:'14:00',f1:'🇦🇷',t1:'Argentina',f2:'🇦🇹',t2:'Áustria',cidade:'Dallas'},
-  {id:'I3',grupo:'I',rodada:2,data:'2026-06-22',hora:'18:00',f1:'🇫🇷',t1:'França',f2:'🇮🇶',t2:'Iraque',cidade:'Filadélfia'},
-  {id:'I4',grupo:'I',rodada:2,data:'2026-06-22',hora:'21:00',f1:'🇳🇴',t1:'Noruega',f2:'🇸🇳',t2:'Senegal',cidade:'Nova York/NJ'},
-  {id:'J4',grupo:'J',rodada:2,data:'2026-06-23',hora:'00:00',f1:'🇯🇴',t1:'Jordânia',f2:'🇩🇿',t2:'Argélia',cidade:'San Francisco'},
-  {id:'L3',grupo:'L',rodada:2,data:'2026-06-23',hora:'14:00',f1:'🇵🇹',t1:'Portugal',f2:'🇺🇿',t2:'Uzbequistão',cidade:'Houston'},
-  {id:'L4',grupo:'L',rodada:2,data:'2026-06-23',hora:'17:00',f1:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',t1:'Inglaterra',f2:'🇬🇭',t2:'Gana',cidade:'Boston'},
-  {id:'K3',grupo:'K',rodada:2,data:'2026-06-23',hora:'20:00',f1:'🇵🇦',t1:'Panamá',f2:'🇭🇷',t2:'Croácia',cidade:'Toronto'},
-  {id:'K4',grupo:'K',rodada:2,data:'2026-06-23',hora:'23:00',f1:'🇨🇴',t1:'Colômbia',f2:'🇨🇩',t2:'RD Congo',cidade:'Guadalajara'},
-  {id:'B5',grupo:'B',rodada:3,data:'2026-06-24',hora:'16:00',f1:'🇨🇭',t1:'Suíça',f2:'🇨🇦',t2:'Canadá',cidade:'Vancouver'},
-  {id:'B6',grupo:'B',rodada:3,data:'2026-06-24',hora:'16:00',f1:'🇧🇦',t1:'Bósnia e Herz.',f2:'🇶🇦',t2:'Catar',cidade:'Seattle'},
-  {id:'C5',grupo:'C',rodada:3,data:'2026-06-24',hora:'19:00',f1:'🏴󠁧󠁢󠁳󠁣󠁴󠁿',t1:'Escócia',f2:'🇧🇷',t2:'Brasil',cidade:'Miami'},
-  {id:'C6',grupo:'C',rodada:3,data:'2026-06-24',hora:'19:00',f1:'🇲🇦',t1:'Marrocos',f2:'🇭🇹',t2:'Haiti',cidade:'Atlanta'},
-  {id:'A5',grupo:'A',rodada:3,data:'2026-06-24',hora:'22:00',f1:'🇨🇿',t1:'Rep. Tcheca',f2:'🇲🇽',t2:'México',cidade:'Cidade do México'},
-  {id:'A6',grupo:'A',rodada:3,data:'2026-06-24',hora:'22:00',f1:'🇿🇦',t1:'África do Sul',f2:'🇰🇷',t2:'Coreia do Sul',cidade:'Monterrey'},
-  {id:'E5',grupo:'E',rodada:3,data:'2026-06-25',hora:'17:00',f1:'🇪🇨',t1:'Equador',f2:'🇩🇪',t2:'Alemanha',cidade:'Nova York/NJ'},
-  {id:'E6',grupo:'E',rodada:3,data:'2026-06-25',hora:'17:00',f1:'🇨🇼',t1:'Curaçao',f2:'🇨🇮',t2:'Costa do Marfim',cidade:'Filadélfia'},
-  {id:'D5',grupo:'D',rodada:3,data:'2026-06-25',hora:'20:00',f1:'🇵🇾',t1:'Paraguai',f2:'🇦🇺',t2:'Austrália',cidade:'Kansas City'},
-  {id:'D6',grupo:'D',rodada:3,data:'2026-06-25',hora:'20:00',f1:'🇹🇷',t1:'Turquia',f2:'🇺🇸',t2:'Estados Unidos',cidade:'Los Angeles'},
-  {id:'F5',grupo:'F',rodada:3,data:'2026-06-25',hora:'23:00',f1:'🇸🇪',t1:'Suécia',f2:'🇳🇱',t2:'Holanda',cidade:'Houston'},
-  {id:'F6',grupo:'F',rodada:3,data:'2026-06-25',hora:'23:00',f1:'🇯🇵',t1:'Japão',f2:'🇹🇳',t2:'Tunísia',cidade:'Dallas'},
-  {id:'H5',grupo:'H',rodada:3,data:'2026-06-26',hora:'16:00',f1:'🇨🇻',t1:'Cabo Verde',f2:'🇸🇦',t2:'Arábia Saudita',cidade:'Miami'},
-  {id:'H6',grupo:'H',rodada:3,data:'2026-06-26',hora:'16:00',f1:'🇺🇾',t1:'Uruguai',f2:'🇪🇸',t2:'Espanha',cidade:'Atlanta'},
-  {id:'G5',grupo:'G',rodada:3,data:'2026-06-26',hora:'19:00',f1:'🇪🇬',t1:'Egito',f2:'🇧🇪',t2:'Bélgica',cidade:'Dallas'},
-  {id:'G6',grupo:'G',rodada:3,data:'2026-06-26',hora:'19:00',f1:'🇳🇿',t1:'Nova Zelândia',f2:'🇮🇷',t2:'Irã',cidade:'Toronto'},
-  {id:'I5',grupo:'I',rodada:3,data:'2026-06-26',hora:'22:00',f1:'🇸🇳',t1:'Senegal',f2:'🇫🇷',t2:'França',cidade:'Boston'},
-  {id:'I6',grupo:'I',rodada:3,data:'2026-06-26',hora:'22:00',f1:'🇮🇶',t1:'Iraque',f2:'🇳🇴',t2:'Noruega',cidade:'Vancouver'},
-  {id:'J5',grupo:'J',rodada:3,data:'2026-06-27',hora:'15:00',f1:'🇩🇿',t1:'Argélia',f2:'🇦🇷',t2:'Argentina',cidade:'Los Angeles'},
-  {id:'J6',grupo:'J',rodada:3,data:'2026-06-27',hora:'15:00',f1:'🇯🇴',t1:'Jordânia',f2:'🇦🇹',t2:'Áustria',cidade:'San Francisco'},
-  {id:'K5',grupo:'K',rodada:3,data:'2026-06-27',hora:'18:00',f1:'🇨🇩',t1:'RD Congo',f2:'🇵🇹',t2:'Portugal',cidade:'Atlanta'},
-  {id:'K6',grupo:'K',rodada:3,data:'2026-06-27',hora:'18:00',f1:'🇨🇴',t1:'Colômbia',f2:'🇺🇿',t2:'Uzbequistão',cidade:'Seattle'},
-  {id:'L5',grupo:'L',rodada:3,data:'2026-06-27',hora:'21:00',f1:'🇭🇷',t1:'Croácia',f2:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',t2:'Inglaterra',cidade:'Kansas City'},
-  {id:'L6',grupo:'L',rodada:3,data:'2026-06-27',hora:'21:00',f1:'🇵🇦',t1:'Panamá',f2:'🇬🇭',t2:'Gana',cidade:'Houston'}
+  {id:'A1',grupo:'A',rodada:1,data:'2026-06-11',hora:'16:00',f1:'mx',t1:'México',f2:'za',t2:'África do Sul',cidade:'Cidade do México'},
+  {id:'A2',grupo:'A',rodada:1,data:'2026-06-11',hora:'23:00',f1:'kr',t1:'Coreia do Sul',f2:'cz',t2:'Rep. Tcheca',cidade:'Guadalajara'},
+  {id:'B1',grupo:'B',rodada:1,data:'2026-06-12',hora:'16:00',f1:'ca',t1:'Canadá',f2:'ba',t2:'Bósnia e Herz.',cidade:'Toronto'},
+  {id:'D1',grupo:'D',rodada:1,data:'2026-06-12',hora:'22:00',f1:'us',t1:'Estados Unidos',f2:'py',t2:'Paraguai',cidade:'Los Angeles'},
+  {id:'D2',grupo:'D',rodada:1,data:'2026-06-13',hora:'01:00',f1:'au',t1:'Austrália',f2:'tr',t2:'Turquia',cidade:'Vancouver'},
+  {id:'B2',grupo:'B',rodada:1,data:'2026-06-13',hora:'16:00',f1:'qa',t1:'Catar',f2:'ch',t2:'Suíça',cidade:'San Francisco'},
+  {id:'C1',grupo:'C',rodada:1,data:'2026-06-13',hora:'19:00',f1:'br',t1:'Brasil',f2:'ma',t2:'Marrocos',cidade:'Nova York/NJ'},
+  {id:'C2',grupo:'C',rodada:1,data:'2026-06-13',hora:'22:00',f1:'ht',t1:'Haiti',f2:'gb-sct',t2:'Escócia',cidade:'Boston'},
+  {id:'E1',grupo:'E',rodada:1,data:'2026-06-14',hora:'14:00',f1:'de',t1:'Alemanha',f2:'cw',t2:'Curaçao',cidade:'Houston'},
+  {id:'F1',grupo:'F',rodada:1,data:'2026-06-14',hora:'17:00',f1:'nl',t1:'Holanda',f2:'jp',t2:'Japão',cidade:'Dallas'},
+  {id:'E2',grupo:'E',rodada:1,data:'2026-06-14',hora:'20:00',f1:'ci',t1:'Costa do Marfim',f2:'ec',t2:'Equador',cidade:'Filadélfia'},
+  {id:'F2',grupo:'F',rodada:1,data:'2026-06-14',hora:'23:00',f1:'se',t1:'Suécia',f2:'tn',t2:'Tunísia',cidade:'Monterrey'},
+  {id:'H1',grupo:'H',rodada:1,data:'2026-06-15',hora:'13:00',f1:'es',t1:'Espanha',f2:'cv',t2:'Cabo Verde',cidade:'Atlanta'},
+  {id:'G1',grupo:'G',rodada:1,data:'2026-06-15',hora:'16:00',f1:'be',t1:'Bélgica',f2:'eg',t2:'Egito',cidade:'Seattle'},
+  {id:'H2',grupo:'H',rodada:1,data:'2026-06-15',hora:'19:00',f1:'sa',t1:'Arábia Saudita',f2:'uy',t2:'Uruguai',cidade:'Miami'},
+  {id:'G2',grupo:'G',rodada:1,data:'2026-06-15',hora:'22:00',f1:'ir',t1:'Irã',f2:'nz',t2:'Nova Zelândia',cidade:'Los Angeles'},
+  {id:'J1',grupo:'J',rodada:1,data:'2026-06-16',hora:'14:00',f1:'ar',t1:'Argentina',f2:'dz',t2:'Argélia',cidade:'Kansas City'},
+  {id:'I1',grupo:'I',rodada:1,data:'2026-06-16',hora:'16:00',f1:'fr',t1:'França',f2:'sn',t2:'Senegal',cidade:'Nova York/NJ'},
+  {id:'I2',grupo:'I',rodada:1,data:'2026-06-16',hora:'19:00',f1:'iq',t1:'Iraque',f2:'no',t2:'Noruega',cidade:'Boston'},
+  {id:'J2',grupo:'J',rodada:1,data:'2026-06-17',hora:'01:00',f1:'at',t1:'Áustria',f2:'jo',t2:'Jordânia',cidade:'San Francisco'},
+  {id:'K1',grupo:'K',rodada:1,data:'2026-06-17',hora:'14:00',f1:'pt',t1:'Portugal',f2:'cd',t2:'RD Congo',cidade:'Houston'},
+  {id:'L1',grupo:'L',rodada:1,data:'2026-06-17',hora:'17:00',f1:'gb-eng',t1:'Inglaterra',f2:'hr',t2:'Croácia',cidade:'Dallas'},
+  {id:'L2',grupo:'L',rodada:1,data:'2026-06-17',hora:'20:00',f1:'gh',t1:'Gana',f2:'pa',t2:'Panamá',cidade:'Toronto'},
+  {id:'K2',grupo:'K',rodada:1,data:'2026-06-17',hora:'23:00',f1:'uz',t1:'Uzbequistão',f2:'co',t2:'Colômbia',cidade:'Cidade do México'},
+  {id:'A3',grupo:'A',rodada:2,data:'2026-06-18',hora:'13:00',f1:'cz',t1:'Rep. Tcheca',f2:'za',t2:'África do Sul',cidade:'Atlanta'},
+  {id:'B3',grupo:'B',rodada:2,data:'2026-06-18',hora:'16:00',f1:'ch',t1:'Suíça',f2:'ba',t2:'Bósnia e Herz.',cidade:'Los Angeles'},
+  {id:'B4',grupo:'B',rodada:2,data:'2026-06-18',hora:'19:00',f1:'ca',t1:'Canadá',f2:'qa',t2:'Catar',cidade:'Vancouver'},
+  {id:'A4',grupo:'A',rodada:2,data:'2026-06-18',hora:'22:00',f1:'mx',t1:'México',f2:'kr',t2:'Coreia do Sul',cidade:'Guadalajara'},
+  {id:'D3',grupo:'D',rodada:2,data:'2026-06-19',hora:'01:00',f1:'tr',t1:'Turquia',f2:'py',t2:'Paraguai',cidade:'San Francisco'},
+  {id:'D4',grupo:'D',rodada:2,data:'2026-06-19',hora:'16:00',f1:'us',t1:'Estados Unidos',f2:'au',t2:'Austrália',cidade:'Seattle'},
+  {id:'C3',grupo:'C',rodada:2,data:'2026-06-19',hora:'19:00',f1:'gb-sct',t1:'Escócia',f2:'ma',t2:'Marrocos',cidade:'Boston'},
+  {id:'C4',grupo:'C',rodada:2,data:'2026-06-19',hora:'22:00',f1:'br',t1:'Brasil',f2:'ht',t2:'Haiti',cidade:'Filadélfia'},
+  {id:'F3',grupo:'F',rodada:2,data:'2026-06-20',hora:'14:00',f1:'nl',t1:'Holanda',f2:'se',t2:'Suécia',cidade:'Houston'},
+  {id:'E3',grupo:'E',rodada:2,data:'2026-06-20',hora:'17:00',f1:'de',t1:'Alemanha',f2:'ci',t2:'Costa do Marfim',cidade:'Toronto'},
+  {id:'E4',grupo:'E',rodada:2,data:'2026-06-20',hora:'21:00',f1:'ec',t1:'Equador',f2:'cw',t2:'Curaçao',cidade:'Kansas City'},
+  {id:'F4',grupo:'F',rodada:2,data:'2026-06-21',hora:'01:00',f1:'tn',t1:'Tunísia',f2:'jp',t2:'Japão',cidade:'Monterrey'},
+  {id:'H3',grupo:'H',rodada:2,data:'2026-06-21',hora:'13:00',f1:'es',t1:'Espanha',f2:'sa',t2:'Arábia Saudita',cidade:'Atlanta'},
+  {id:'G3',grupo:'G',rodada:2,data:'2026-06-21',hora:'16:00',f1:'be',t1:'Bélgica',f2:'ir',t2:'Irã',cidade:'Los Angeles'},
+  {id:'H4',grupo:'H',rodada:2,data:'2026-06-21',hora:'19:00',f1:'uy',t1:'Uruguai',f2:'cv',t2:'Cabo Verde',cidade:'Miami'},
+  {id:'G4',grupo:'G',rodada:2,data:'2026-06-21',hora:'22:00',f1:'nz',t1:'Nova Zelândia',f2:'eg',t2:'Egito',cidade:'Vancouver'},
+  {id:'J3',grupo:'J',rodada:2,data:'2026-06-22',hora:'14:00',f1:'ar',t1:'Argentina',f2:'at',t2:'Áustria',cidade:'Dallas'},
+  {id:'I3',grupo:'I',rodada:2,data:'2026-06-22',hora:'18:00',f1:'fr',t1:'França',f2:'iq',t2:'Iraque',cidade:'Filadélfia'},
+  {id:'I4',grupo:'I',rodada:2,data:'2026-06-22',hora:'21:00',f1:'no',t1:'Noruega',f2:'sn',t2:'Senegal',cidade:'Nova York/NJ'},
+  {id:'J4',grupo:'J',rodada:2,data:'2026-06-23',hora:'00:00',f1:'jo',t1:'Jordânia',f2:'dz',t2:'Argélia',cidade:'San Francisco'},
+  {id:'L3',grupo:'L',rodada:2,data:'2026-06-23',hora:'14:00',f1:'pt',t1:'Portugal',f2:'uz',t2:'Uzbequistão',cidade:'Houston'},
+  {id:'L4',grupo:'L',rodada:2,data:'2026-06-23',hora:'17:00',f1:'gb-eng',t1:'Inglaterra',f2:'gh',t2:'Gana',cidade:'Boston'},
+  {id:'K3',grupo:'K',rodada:2,data:'2026-06-23',hora:'20:00',f1:'pa',t1:'Panamá',f2:'hr',t2:'Croácia',cidade:'Toronto'},
+  {id:'K4',grupo:'K',rodada:2,data:'2026-06-23',hora:'23:00',f1:'co',t1:'Colômbia',f2:'cd',t2:'RD Congo',cidade:'Guadalajara'},
+  {id:'B5',grupo:'B',rodada:3,data:'2026-06-24',hora:'16:00',f1:'ch',t1:'Suíça',f2:'ca',t2:'Canadá',cidade:'Vancouver'},
+  {id:'B6',grupo:'B',rodada:3,data:'2026-06-24',hora:'16:00',f1:'ba',t1:'Bósnia e Herz.',f2:'qa',t2:'Catar',cidade:'Seattle'},
+  {id:'C5',grupo:'C',rodada:3,data:'2026-06-24',hora:'19:00',f1:'gb-sct',t1:'Escócia',f2:'br',t2:'Brasil',cidade:'Miami'},
+  {id:'C6',grupo:'C',rodada:3,data:'2026-06-24',hora:'19:00',f1:'ma',t1:'Marrocos',f2:'ht',t2:'Haiti',cidade:'Atlanta'},
+  {id:'A5',grupo:'A',rodada:3,data:'2026-06-24',hora:'22:00',f1:'cz',t1:'Rep. Tcheca',f2:'mx',t2:'México',cidade:'Cidade do México'},
+  {id:'A6',grupo:'A',rodada:3,data:'2026-06-24',hora:'22:00',f1:'za',t1:'África do Sul',f2:'kr',t2:'Coreia do Sul',cidade:'Monterrey'},
+  {id:'E5',grupo:'E',rodada:3,data:'2026-06-25',hora:'17:00',f1:'ec',t1:'Equador',f2:'de',t2:'Alemanha',cidade:'Nova York/NJ'},
+  {id:'E6',grupo:'E',rodada:3,data:'2026-06-25',hora:'17:00',f1:'cw',t1:'Curaçao',f2:'ci',t2:'Costa do Marfim',cidade:'Filadélfia'},
+  {id:'D5',grupo:'D',rodada:3,data:'2026-06-25',hora:'20:00',f1:'py',t1:'Paraguai',f2:'au',t2:'Austrália',cidade:'Kansas City'},
+  {id:'D6',grupo:'D',rodada:3,data:'2026-06-25',hora:'20:00',f1:'tr',t1:'Turquia',f2:'us',t2:'Estados Unidos',cidade:'Los Angeles'},
+  {id:'F5',grupo:'F',rodada:3,data:'2026-06-25',hora:'23:00',f1:'se',t1:'Suécia',f2:'nl',t2:'Holanda',cidade:'Houston'},
+  {id:'F6',grupo:'F',rodada:3,data:'2026-06-25',hora:'23:00',f1:'jp',t1:'Japão',f2:'tn',t2:'Tunísia',cidade:'Dallas'},
+  {id:'H5',grupo:'H',rodada:3,data:'2026-06-26',hora:'16:00',f1:'cv',t1:'Cabo Verde',f2:'sa',t2:'Arábia Saudita',cidade:'Miami'},
+  {id:'H6',grupo:'H',rodada:3,data:'2026-06-26',hora:'16:00',f1:'uy',t1:'Uruguai',f2:'es',t2:'Espanha',cidade:'Atlanta'},
+  {id:'G5',grupo:'G',rodada:3,data:'2026-06-26',hora:'19:00',f1:'eg',t1:'Egito',f2:'be',t2:'Bélgica',cidade:'Dallas'},
+  {id:'G6',grupo:'G',rodada:3,data:'2026-06-26',hora:'19:00',f1:'nz',t1:'Nova Zelândia',f2:'ir',t2:'Irã',cidade:'Toronto'},
+  {id:'I5',grupo:'I',rodada:3,data:'2026-06-26',hora:'22:00',f1:'sn',t1:'Senegal',f2:'fr',t2:'França',cidade:'Boston'},
+  {id:'I6',grupo:'I',rodada:3,data:'2026-06-26',hora:'22:00',f1:'iq',t1:'Iraque',f2:'no',t2:'Noruega',cidade:'Vancouver'},
+  {id:'J5',grupo:'J',rodada:3,data:'2026-06-27',hora:'15:00',f1:'dz',t1:'Argélia',f2:'ar',t2:'Argentina',cidade:'Los Angeles'},
+  {id:'J6',grupo:'J',rodada:3,data:'2026-06-27',hora:'15:00',f1:'jo',t1:'Jordânia',f2:'at',t2:'Áustria',cidade:'San Francisco'},
+  {id:'K5',grupo:'K',rodada:3,data:'2026-06-27',hora:'18:00',f1:'cd',t1:'RD Congo',f2:'pt',t2:'Portugal',cidade:'Atlanta'},
+  {id:'K6',grupo:'K',rodada:3,data:'2026-06-27',hora:'18:00',f1:'co',t1:'Colômbia',f2:'uz',t2:'Uzbequistão',cidade:'Seattle'},
+  {id:'L5',grupo:'L',rodada:3,data:'2026-06-27',hora:'21:00',f1:'hr',t1:'Croácia',f2:'gb-eng',t2:'Inglaterra',cidade:'Kansas City'},
+  {id:'L6',grupo:'L',rodada:3,data:'2026-06-27',hora:'21:00',f1:'pa',t1:'Panamá',f2:'gh',t2:'Gana',cidade:'Houston'}
 ];
 
 // ================================================================
@@ -638,13 +638,13 @@ function buildCardPalpite(jogo, palpite, resultado) {
   h+='<div class="jogo-meta"><span class="jogo-grupo-tag">GRUPO '+jogo.grupo+' · '+jogo.cidade+'</span>';
   h+='<span class="jogo-hora-tag">'+(travado?'🔒 ':'⏰ ')+jogo.hora+'h</span></div>';
   h+='<div class="confronto">';
-  h+='<div class="time-bloco"><span class="flag">'+jogo.f1+'</span><span class="time-nome-txt">'+jogo.t1+'</span></div>';
+  h+='<div class="time-bloco"><img class="flag" src="https://flagcdn.com/24x18/'+jogo.f1+'.png" alt=""><span class="time-nome-txt">'+jogo.t1+'</span></div>';
   h+='<div class="placar-area">';
   h+='<input class="placar-input" type="number" min="0" max="20" placeholder="—" value="'+vg1+'" '+disabled+' id="inp_'+jogo.id+'_g1"/>';
   h+='<span class="placar-sep">x</span>';
   h+='<input class="placar-input" type="number" min="0" max="20" placeholder="—" value="'+vg2+'" '+disabled+' id="inp_'+jogo.id+'_g2"/>';
   h+='</div>';
-  h+='<div class="time-bloco direita"><span class="flag">'+jogo.f2+'</span><span class="time-nome-txt">'+jogo.t2+'</span></div>';
+  h+='<div class="time-bloco direita"><img class="flag" src="https://flagcdn.com/24x18/'+jogo.f2+'.png" alt=""><span class="time-nome-txt">'+jogo.t2+'</span></div>';
   h+='</div>';
   if(resultado&&resultado.g1!==''){
     h+='<div class="resultado-real-row">Resultado: <span class="placar-real-val">'+resultado.g1+' x '+resultado.g2+'</span></div>';
@@ -786,11 +786,11 @@ function renderJogos(grupo) {
       html+='<span class="jogo-grupo-tag">GRUPO '+jogo.grupo+' · '+jogo.cidade+'</span>';
       html+='<span class="jogo-hora-tag">'+jogo.data.slice(5).replace('-','/')+' '+jogo.hora+'h</span></div>';
       html+='<div class="confronto">';
-      html+='<div class="time-bloco"><span class="flag">'+jogo.f1+'</span><span class="time-nome-txt">'+jogo.t1+'</span></div>';
+      html+='<div class="time-bloco"><img class="flag" src="https://flagcdn.com/24x18/'+jogo.f1+'.png" alt=""><span class="time-nome-txt">'+jogo.t1+'</span></div>';
       html+='<div style="display:flex;align-items:center;justify-content:center;min-width:70px;">';
       html+=(r&&r.g1!=='')?'<span class="placar-exibido">'+r.g1+' x '+r.g2+'</span>':'<span class="vs-txt">vs</span>';
       html+='</div>';
-      html+='<div class="time-bloco direita"><span class="flag">'+jogo.f2+'</span><span class="time-nome-txt">'+jogo.t2+'</span></div>';
+      html+='<div class="time-bloco direita"><img class="flag" src="https://flagcdn.com/24x18/'+jogo.f2+'.png" alt=""><span class="time-nome-txt">'+jogo.t2+'</span></div>';
       html+='</div></div>';
     });
     html+='</div>';
@@ -860,7 +860,7 @@ function buildAdminPalpitesView() {
     JOGOS.filter(function(j){return j.rodada===rod;}).forEach(function(jogo){
       var r=resultadosCache[jogo.id];
       html+='<div class="admin-card">';
-      html+='<div class="admin-jogo-nome">'+jogo.f1+' '+jogo.t1+' x '+jogo.f2+' '+jogo.t2;
+      html+='<div class="admin-jogo-nome"><img class="flag-sm" src="https://flagcdn.com/20x15/'+jogo.f1+'.png" alt=""> '+jogo.t1+' x <img class="flag-sm" src="https://flagcdn.com/20x15/'+jogo.f2+'.png" alt=""> '+jogo.t2;
       html+=' <span style="font-size:.7rem;color:var(--texto-dim);">'+jogo.data.slice(5).replace('-','/')+' '+jogo.hora+'h</span>';
       if(r&&r.g1!=='') html+=' <span style="font-size:.78rem;color:var(--amarelo);margin-left:8px;">✅ Real: '+r.g1+' x '+r.g2+'</span>';
       html+='</div>';
@@ -898,7 +898,7 @@ function renderAdminResultados() {
     JOGOS.filter(function(j){return j.rodada===rod;}).forEach(function(jogo){
       var r=resultadosCache[jogo.id]||{g1:'',g2:''};
       html+='<div class="admin-card">';
-      html+='<div class="admin-jogo-nome">'+jogo.f1+' '+jogo.t1+' x '+jogo.f2+' '+jogo.t2;
+      html+='<div class="admin-jogo-nome"><img class="flag-sm" src="https://flagcdn.com/20x15/'+jogo.f1+'.png" alt=""> '+jogo.t1+' x <img class="flag-sm" src="https://flagcdn.com/20x15/'+jogo.f2+'.png" alt=""> '+jogo.t2;
       html+=' <span style="font-size:.7rem;color:var(--texto-dim);">'+jogo.data.slice(5).replace('-','/')+' '+jogo.hora+'h</span></div>';
       html+='<div class="admin-inputs">';
       html+='<input type="number" min="0" max="20" placeholder="?" value="'+(r.g1!==''?r.g1:'')+'" id="ar_'+jogo.id+'_g1"/>';
@@ -1022,7 +1022,7 @@ function verDetalheComum(nome, voltarFn) {
     var rStr=(r&&r.g1!=='')?r.g1+' x '+r.g2:'?';
     var cls=pts===null?'pts-0':pts===7?'pts-7':pts>=5?'pts-5':pts>=2?'pts-2':'pts-0';
     linhas+='<div class="detalhe-jogo">';
-    linhas+='<div class="dj-times">'+j.f1+' '+j.t1+' x '+j.f2+' '+j.t2+'</div>';
+    linhas+='<div class="dj-times"><img class="flag-sm" src="https://flagcdn.com/20x15/'+j.f1+'.png" alt=""> '+j.t1+' x <img class="flag-sm" src="https://flagcdn.com/20x15/'+j.f2+'.png" alt=""> '+j.t2+'</div>';
     linhas+='<div class="dj-palpite">Palpite: <strong>'+pStr+'</strong> · Real: <strong>'+rStr+'</strong></div>';
     linhas+='<div class="dj-pts '+cls+'">'+(pts!==null?pts+' pts':'—')+'</div>';
     linhas+='</div>';
