@@ -426,11 +426,16 @@ function calcPontos(palpite, resultado) {
   if (isNaN(pg1)||isNaN(pg2)||isNaN(rg1)||isNaN(rg2)) return null;
   var resP=pg1>pg2?1:pg1<pg2?-1:0;
   var resR=rg1>rg2?1:rg1<rg2?-1:0;
-  if (resP!==resR) return 0;
-  if (pg1===rg1&&pg2===rg2) return 7;
-  var pts=2;
-  if (pg1===rg1) pts++;
-  if (pg2===rg2) pts++;
+  var acertouRes = resP===resR;
+  var acertouG1  = pg1===rg1;
+  var acertouG2  = pg2===rg2;
+  var acertouExato = acertouG1 && acertouG2;
+  // Placar exato = máximo 7 pts (independente de resultado)
+  if (acertouExato) return 7;
+  var pts = 0;
+  if (acertouRes) pts += 2;
+  if (acertouG1)  pts += 1;
+  if (acertouG2)  pts += 1;
   return pts;
 }
 
