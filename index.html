@@ -304,7 +304,7 @@ var ADMIN_SENHA = '1ateoito'; // Mude para sua senha preferida
 var CRYPTO_KEY  = 'BrasilHexa';   // Chave de criptografia
 
 // COLE AQUI A URL DO SEU GOOGLE APPS SCRIPT APÓS PUBLICAR:
-var GAS_URL = 'https://script.google.com/macros/s/AKfycbw45pT5zd9fvgow3IAmsM3e016T3NFrZ9fnYwOizczp8_sNg6rcg-mhDsKVwGs9KCzPwQ/exec';
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbwDSmdzc5qxB0TTYRWGfH7DhaGAE2EftMOz0j0QO3vLzwalL6YcgnLJ54mD08wcUVVfJA/exec';
 
 // ================================================================
 // JOGOS — 48 partidas Copa 2026 (horário Brasília)
@@ -481,15 +481,68 @@ function gasMarcarValidador(jogoIds, callback) {
   gasCall({acao: 'marcar_validador', jogo_ids: jogoIds}, callback);
 }
 
+// Salvar resultado oficial na aba RESULTADOS
+function gasSalvarResultado(jogoId, g1, g2, callback) {
+  gasCall({
+    acao: 'salvar_resultado',
+    jogo_id: jogoId,
+    g1: g1,
+    g2: g2,
+    timestamp: new Date().toLocaleString('pt-BR', {timeZone:'America/Sao_Paulo'})
+  }, callback);
+}
+
+// Carregar todos os resultados oficiais
+function gasCarregarResultados(callback) {
+  gasCall({acao: 'carregar_resultados'}, callback);
+}
+
 // ================================================================
 // INIT — preenche select de logins
 // ================================================================
 window.addEventListener('load', function() {
   document.getElementById('loginSelect').focus();
-  // Resultados ficam no localStorage (só admin insere, não precisa criptografar)
+  // Cache local de resultados (usado enquanto a planilha não responde)
   var r = localStorage.getItem('bolao26_resultados');
   if (r) { try { resultadosCache = JSON.parse(r); } catch(e){} }
+  // Busca resultados oficiais da planilha (RESULTADOS), válidos para todos os usuários
+  carregarResultadosDaPlanilha(function(){});
 });
+
+// ================================================================
+// RESULTADOS — sincronização com a planilha (todos os usuários)
+// ================================================================
+function carregarResultadosDaPlanilha(callback) {
+  gasCarregarResultados(function(resp) {
+    if (resp && resp.ok) {
+      var dados = resp.dados || [];
+      var novo = {};
+      dados.forEach(function(linha) {
+        novo[linha.jogo_id] = {g1: String(linha.g1), g2: String(linha.g2)};
+      });
+      resultadosCache = novo;
+      localStorage.setItem('bolao26_resultados', JSON.stringify(resultadosCache));
+    }
+    if (callback) callback(resp);
+  });
+}
+
+// Carrega palpites de TODOS os usuários (usado no ranking)
+function carregarTodosPalpites(callback) {
+  gasCarregarPalpites(function(resp) {
+    if (resp && resp.ok) {
+      var dados = resp.dados || [];
+      dados.forEach(function(linha) {
+        var dec = decryptPalpite(linha.palpite_enc);
+        if (dec) {
+          if (!palpitesCache[linha.usuario]) palpitesCache[linha.usuario] = {};
+          palpitesCache[linha.usuario][linha.jogo_id] = dec;
+        }
+      });
+    }
+    if (callback) callback(resp);
+  });
+}
 
 // ================================================================
 // LOGIN / LOGOUT
@@ -595,7 +648,7 @@ function showTab(tab) {
     document.getElementById('tab'+cap(t)).classList.toggle('active', t===tab);
   });
   if (tab==='palpites') renderPalpites();
-  if (tab==='ranking')  renderRanking();
+  if (tab==='ranking')  carregarDadosRanking(renderRanking);
   if (tab==='jogos')    renderJogos('todos');
 }
 function showAdminTab(tab) {
@@ -604,7 +657,7 @@ function showAdminTab(tab) {
     document.getElementById('adminTab'+cap(t)).classList.toggle('active', t===tab);
   });
   if (tab==='palpites')      renderAdminPalpites();
-  if (tab==='resultados')    renderAdminResultados();
+  if (tab==='resultados')    carregarResultadosDaPlanilha(renderAdminResultados);
   if (tab==='ranking')       renderAdminRanking();
   if (tab==='participantes') renderAdminParticipantes();
 }
@@ -740,6 +793,19 @@ function editarPalpite(jogoId){ editando[jogoId]=true; renderPalpites(); }
 function cancelarEdicao(jogoId){ editando[jogoId]=false; renderPalpites(); }
 
 // ================================================================
+// RANKING — carrega palpites de todos + resultados oficiais
+// ================================================================
+function carregarDadosRanking(callback) {
+  mostrarLoading('Atualizando ranking...');
+  carregarResultadosDaPlanilha(function() {
+    carregarTodosPalpites(function() {
+      esconderLoading();
+      if (callback) callback();
+    });
+  });
+}
+
+// ================================================================
 // RENDER RANKING (usuário comum — só vê pontuação, não palpites)
 // ================================================================
 function renderRanking() {
@@ -775,7 +841,7 @@ function renderRanking() {
     var cls=i===0?'gold':i===1?'silver':i===2?'bronze':'normal';
     var medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
     var bg=p.nome===currentUser?'background:rgba(26,122,60,.1);':'';
-    html+='<div class="ranking-row" style="'+bg+';cursor:default">';
+    html+='<div class="ranking-row" style="'+bg+'" onclick="verDetalhe(\''+esc(p.nome)+'\')">';
     html+='<div class="rank-pos '+cls+'">'+medal+'</div>';
     html+='<div style="flex:1"><div class="rank-nome">'+p.nome+(p.nome===currentUser?' 👈':'')+'</div>';
     html+=(p.exatos>0?'<div style="font-size:.73rem;color:var(--ouro)">⭐ '+p.exatos+' placar(es) exato(s)</div>':'')+'</div>';
@@ -783,6 +849,7 @@ function renderRanking() {
     html+='</div>';
   });
   html+='</div>';
+  html+='<p style="font-size:.73rem;color:var(--texto-dim);text-align:center;margin-top:8px;">Toque num participante para ver os palpites dos jogos já iniciados</p>';
   el.innerHTML=html;
 }
 
@@ -946,22 +1013,40 @@ function salvarResultadoLocal(jogoId) {
   var g1=document.getElementById('ar_'+jogoId+'_g1').value;
   var g2=document.getElementById('ar_'+jogoId+'_g2').value;
   if(g1===''||g2===''){showToast('⚠️ Preencha os dois gols!',true);return;}
-  resultadosCache[jogoId]={g1:g1,g2:g2};
-  localStorage.setItem('bolao26_resultados', JSON.stringify(resultadosCache));
-  document.getElementById('adm_st_'+jogoId).textContent='Salvo: '+g1+' x '+g2;
-  showToast('✅ Resultado salvo!');
+  var statEl=document.getElementById('adm_st_'+jogoId);
+  statEl.textContent='Salvando...';
+  gasSalvarResultado(jogoId, g1, g2, function(resp){
+    if(resp && resp.ok){
+      resultadosCache[jogoId]={g1:g1,g2:g2};
+      localStorage.setItem('bolao26_resultados', JSON.stringify(resultadosCache));
+      statEl.textContent='Salvo: '+g1+' x '+g2;
+      showToast('✅ Resultado salvo!');
+    } else {
+      statEl.textContent='';
+      showToast('❌ Erro ao salvar: '+(resp&&resp.erro?resp.erro:'falha na conexão'), true);
+    }
+  });
 }
 
 function limparResultado(jogoId) {
   if(!resultadosCache[jogoId]||resultadosCache[jogoId].g1==='') {
     showToast('⚠️ Nenhum resultado para limpar.',true); return;
   }
-  delete resultadosCache[jogoId];
-  localStorage.setItem('bolao26_resultados', JSON.stringify(resultadosCache));
-  document.getElementById('ar_'+jogoId+'_g1').value='';
-  document.getElementById('ar_'+jogoId+'_g2').value='';
-  document.getElementById('adm_st_'+jogoId).textContent='';
-  showToast('🗑️ Resultado removido!');
+  var statEl=document.getElementById('adm_st_'+jogoId);
+  statEl.textContent='Removendo...';
+  gasSalvarResultado(jogoId, '', '', function(resp){
+    if(resp && resp.ok){
+      delete resultadosCache[jogoId];
+      localStorage.setItem('bolao26_resultados', JSON.stringify(resultadosCache));
+      document.getElementById('ar_'+jogoId+'_g1').value='';
+      document.getElementById('ar_'+jogoId+'_g2').value='';
+      statEl.textContent='';
+      showToast('🗑️ Resultado removido!');
+    } else {
+      statEl.textContent='Salvo: '+resultadosCache[jogoId].g1+' x '+resultadosCache[jogoId].g2;
+      showToast('❌ Erro ao remover: '+(resp&&resp.erro?resp.erro:'falha na conexão'), true);
+    }
+  });
 }
 
 // ================================================================
@@ -1003,7 +1088,8 @@ function renderAdminRanking() {
 }
 
 function verDetalheAdmin(nome) {
-  verDetalheComum(nome, function(){ showAdminTab('ranking'); });
+  // Admin vê todos os palpites, mesmo de jogos que ainda não começaram
+  verDetalheComum(nome, function(){ showAdminTab('ranking'); }, false);
 }
 
 // ================================================================
@@ -1036,7 +1122,9 @@ function renderAdminParticipantes() {
 // DETALHE PARTICIPANTE
 // ================================================================
 function verDetalhe(nome) {
-  verDetalheComum(nome, function(){ showTab('ranking'); });
+  // Usuário comum só vê os palpites de outros jogadores em jogos já iniciados
+  var apenasIniciados = (nome !== currentUser);
+  verDetalheComum(nome, function(){ showTab('ranking'); }, apenasIniciados);
 }
 function voltarRanking() {
   document.getElementById('detalheScreen').style.display='none';
@@ -1049,16 +1137,23 @@ function voltarRanking() {
   }
 }
 
-function verDetalheComum(nome, voltarFn) {
+function verDetalheComum(nome, voltarFn, apenasIniciados) {
   var meus=palpitesCache[nome]||{};
   var total=0;
   document.getElementById('detalheNomeHeader').textContent=nome;
 
-  var linhas='';
+  // Total sempre considera todos os jogos com resultado, independente do filtro de exibição
   JOGOS.forEach(function(j){
+    var pts=calcPontos(meus[j.id], resultadosCache[j.id]);
+    if(pts!==null) total+=pts;
+  });
+
+  var jogosExibidos = apenasIniciados ? JOGOS.filter(function(j){return jogoTravado(j);}) : JOGOS;
+
+  var linhas='';
+  jogosExibidos.forEach(function(j){
     var p=meus[j.id], r=resultadosCache[j.id];
     var pts=calcPontos(p,r);
-    if(pts!==null) total+=pts;
     var pStr=(p&&p.g1!==''&&p.g2!=='')?p.g1+' x '+p.g2:'—';
     var rStr=(r&&r.g1!=='')?r.g1+' x '+r.g2:'?';
     var cls=pts===null?'pts-0':pts===7?'pts-7':pts>=5?'pts-5':pts>=2?'pts-2':'pts-0';
@@ -1068,6 +1163,9 @@ function verDetalheComum(nome, voltarFn) {
     linhas+='<div class="dj-pts '+cls+'">'+(pts!==null?pts+' pts':'—')+'</div>';
     linhas+='</div>';
   });
+  if(apenasIniciados && jogosExibidos.length===0){
+    linhas='<div class="empty-state"><div class="icon">🔒</div><p>Nenhum jogo iniciado ainda.</p></div>';
+  }
 
   var html='<div class="stats-bar"><div class="stat-pill">🏆 Total: <strong>'+total+' pts</strong></div></div>';
   html+=linhas;
