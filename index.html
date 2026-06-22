@@ -7738,63 +7738,71 @@ function renderPalpites() {
     html+='</div>';
   }
   el.innerHTML = html;
+
+  // Event delegation para botões de palpite
+  el.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    var action = btn.getAttribute('data-action');
+    var jogoId = btn.getAttribute('data-jogo');
+    if (action === 'salvar')   salvarPalpiteCard(jogoId);
+    if (action === 'editar')   editarPalpite(jogoId);
+    if (action === 'cancelar') cancelarEdicao(jogoId);
+  });
 }
 
 function buildCardPalpite(jogo, palpite, resultado) {
-  var travado=jogoTravado(jogo);
-  var temP=palpite&&palpite.g1!==''&&palpite.g2!=='';
-  var editMode=editando[jogo.id]===true;
-  var pts=calcPontos(palpite,resultado);
-  var cardCls='jogo-card'+(travado?' locked':editMode?' editando':temP?' salvo':'');
-  var disabled=(travado||(temP&&!editMode))?'disabled':'';
-  var vg1=(palpite&&palpite.g1!=='')?palpite.g1:'';
-  var vg2=(palpite&&palpite.g2!=='')?palpite.g2:'';
+  var travado  = jogoTravado(jogo);
+  var temP     = palpite && palpite.g1!=='' && palpite.g2!=='';
+  var editMode = editando[jogo.id]===true;
+  var pts      = calcPontos(palpite, resultado);
+  var cardCls  = 'jogo-card'+(travado?' locked':editMode?' editando':temP?' salvo':'');
+  var disabled = (travado||(temP&&!editMode)) ? 'disabled' : '';
+  var vg1      = (palpite&&palpite.g1!=='') ? palpite.g1 : '';
+  var vg2      = (palpite&&palpite.g2!=='') ? palpite.g2 : '';
 
-  var h='<div class="'+cardCls+'" id="card_'+jogo.id+'">';
-  h+='<div class="jogo-meta"><span class="jogo-grupo-tag">GRUPO '+jogo.grupo+' · '+jogo.cidade+'</span>';
-  h+='<span class="jogo-hora-tag">'+(travado?'🔒 ':'⏰ ')+jogo.hora+'h</span></div>';
-  h+='<div class="confronto">';
-  h+='<div class="time-bloco"><img class="flag" src="https://flagcdn.com/24x18/'+jogo.f1+'.png" alt=""><span class="time-nome-txt">'+jogo.t1+'</span></div>';
-  h+='<div class="placar-area">';
-  h+='<input class="placar-input" type="number" min="0" max="20" placeholder="—" value="'+vg1+'" '+disabled+' id="inp_'+jogo.id+'_g1"/>';
-  h+='<span class="placar-sep">x</span>';
-  h+='<input class="placar-input" type="number" min="0" max="20" placeholder="—" value="'+vg2+'" '+disabled+' id="inp_'+jogo.id+'_g2"/>';
-  h+='</div>';
-  h+='<div class="time-bloco direita"><img class="flag" src="https://flagcdn.com/24x18/'+jogo.f2+'.png" alt=""><span class="time-nome-txt">'+jogo.t2+'</span></div>';
-  h+='</div>';
-  if(resultado&&resultado.g1!==''){
-    h+='<div class="resultado-real-row">Resultado: <span class="placar-real-val">'+resultado.g1+' x '+resultado.g2+'</span></div>';
+  var h = '<div class="'+cardCls+'" id="card_'+jogo.id+'">';
+  h += '<div class="jogo-meta"><span class="jogo-grupo-tag">GRUPO '+jogo.grupo+' · '+jogo.cidade+'</span>';
+  h += '<span class="jogo-hora-tag">'+(travado?'🔒 ':'⏰ ')+jogo.hora+'h</span></div>';
+  h += '<div class="confronto">';
+  h += '<div class="time-bloco"><span class="flag"><img src="https://flagcdn.com/24x18/'+jogo.f1+'.png" class="flag"></span><span class="time-nome-txt">'+jogo.t1+'</span></div>';
+  h += '<div class="placar-area">';
+  h += '<input class="placar-input" type="number" min="0" max="20" placeholder="—" value="'+vg1+'" '+disabled+' id="inp_'+jogo.id+'_g1"/>';
+  h += '<span class="placar-sep">x</span>';
+  h += '<input class="placar-input" type="number" min="0" max="20" placeholder="—" value="'+vg2+'" '+disabled+' id="inp_'+jogo.id+'_g2"/>';
+  h += '</div>';
+  h += '<div class="time-bloco direita"><span class="flag"><img src="https://flagcdn.com/24x18/'+jogo.f2+'.png" class="flag"></span><span class="time-nome-txt">'+jogo.t2+'</span></div>';
+  h += '</div>';
+  if (resultado && resultado.g1!=='') {
+    h += '<div class="resultado-real-row">Resultado: <span class="placar-real-val">'+resultado.g1+' x '+resultado.g2+'</span></div>';
   }
-  h+='<div class="card-acoes">';
-  if(pts!==null){
-    var cls=pts===7?'pts-7':pts>=5?'pts-5':pts>=2?'pts-2':'pts-0';
-    h+='<span class="pts-label">Pontos: <span class="pts-val '+cls+'">'+pts+' pts</span></span>';
-  } else { h+='<span></span>'; }
+  h += '<div class="card-acoes">';
+  if (pts!==null) {
+    var cls = pts===7?'pts-7':pts>=5?'pts-5':pts>=2?'pts-2':'pts-0';
+    h += '<span class="pts-label">Pontos: <span class="pts-val '+cls+'">'+pts+' pts</span></span>';
+  } else { h += '<span></span>'; }
 
-  if(travado){
-    h+=temP
-      ?'<span class="status-locked-tag">🔒 Salvo: '+vg1+' x '+vg2+'</span>'
-      :'<span class="status-locked-tag">🔒 Sem palpite</span>';
-  } else if(editMode){
-    h+='<div style="display:flex;gap:6px;align-items:center;">';
-    h+='<button class="btn-cancelar-p" onclick=\'cancelarEdicao(\'+jogo.id+\')\'>Cancelar</button>';
-    h+='<button class="btn-salvar-p" id="btnSalvar_'+jogo.id+'" onclick=\'salvarPalpiteCard(\'+jogo.id+\')\'>💾 Salvar</button>';
-    h+='</div>';
-  } else if(temP){
-    h+='<div style="display:flex;gap:6px;align-items:center;">';
-    h+='<span class="status-salvo-tag">✅ '+vg1+' x '+vg2+'</span>';
-    h+='<button class="btn-editar-p" onclick=\'editarPalpite(\'+jogo.id+\')\'>✏️ Editar</button>';
-    h+='</div>';
+  if (travado) {
+    h += temP
+      ? '<span class="status-locked-tag">🔒 Salvo: '+vg1+' x '+vg2+'</span>'
+      : '<span class="status-locked-tag">🔒 Sem palpite</span>';
+  } else if (editMode) {
+    h += '<div style="display:flex;gap:6px;align-items:center;">';
+    h += '<button class="btn-cancelar-p" data-action="cancelar" data-jogo="'+jogo.id+'">Cancelar</button>';
+    h += '<button class="btn-salvar-p" id="btnSalvar_'+jogo.id+'" data-action="salvar" data-jogo="'+jogo.id+'">💾 Salvar</button>';
+    h += '</div>';
+  } else if (temP) {
+    h += '<div style="display:flex;gap:6px;align-items:center;">';
+    h += '<span class="status-salvo-tag">✅ '+vg1+' x '+vg2+'</span>';
+    h += '<button class="btn-editar-p" data-action="editar" data-jogo="'+jogo.id+'">✏️ Editar</button>';
+    h += '</div>';
   } else {
-    h+='<button class="btn-salvar-p" id="btnSalvar_'+jogo.id+'" onclick=\'salvarPalpiteCard(\'+jogo.id+\')\'>💾 Salvar palpite</button>';
+    h += '<button class="btn-salvar-p" id="btnSalvar_'+jogo.id+'" data-action="salvar" data-jogo="'+jogo.id+'">💾 Salvar palpite</button>';
   }
-  h+='</div></div>';
+  h += '</div></div>';
   return h;
 }
 
-// ================================================================
-// SALVAR PALPITE → Google Sheets
-// ================================================================
 function salvarPalpiteCard(jogoId) {
   var in1=document.getElementById('inp_'+jogoId+'_g1');
   var in2=document.getElementById('inp_'+jogoId+'_g2');
@@ -7876,7 +7884,7 @@ function renderRanking() {
     var cls=i===0?'gold':i===1?'silver':i===2?'bronze':'normal';
     var medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
     var bg=p.nome===currentUser?'background:rgba(26,122,60,.1);':'';
-    html+='<div class="ranking-row" style="'+bg+'" onclick=\'verDetalhe(\'+esc(p.nome)+\')\'>';
+    html+='<div class="ranking-row" style="'+bg+'" data-action="detalhe" data-nome="'+p.nome+'">';
     html+='<div class="rank-pos '+cls+'">'+medal+'</div>';
     html+='<div style="flex:1"><div class="rank-nome">'+p.nome+(p.nome===currentUser?' 👈':'')+'</div>';
     html+=(p.exatos>0?'<div style="font-size:.73rem;color:var(--ouro)">⭐ '+p.exatos+' placar(es) exato(s)</div>':'')+'</div>';
@@ -7886,6 +7894,10 @@ function renderRanking() {
   html+='</div>';
   html+='<p style="font-size:.73rem;color:var(--texto-dim);text-align:center;margin-top:8px;">Toque num participante para ver os palpites dos jogos já iniciados</p>';
   el.innerHTML=html;
+  el.addEventListener('click',function(e){
+    var row=e.target.closest('[data-action="detalhe"]');
+    if(row) verDetalhe(row.getAttribute('data-nome'));
+  });
 }
 
 // ================================================================
@@ -8027,21 +8039,34 @@ function renderAdminResultados() {
     html+='<div class="rodada-bloco"><div class="rodada-label">⚽ RODADA '+rod+'</div>';
     JOGOS.filter(function(j){return j.rodada===rod;}).forEach(function(jogo){
       var r=resultadosCache[jogo.id]||{g1:'',g2:''};
+      var vg1 = r.g1!=='' ? r.g1 : '';
+      var vg2 = r.g2!=='' ? r.g2 : '';
+      var salvo = r.g1!=='' ? 'Salvo: '+r.g1+' x '+r.g2 : '';
       html+='<div class="admin-card">';
       html+='<div class="admin-jogo-nome"><img class="flag-sm" src="https://flagcdn.com/20x15/'+jogo.f1+'.png" alt=""> '+jogo.t1+' x <img class="flag-sm" src="https://flagcdn.com/20x15/'+jogo.f2+'.png" alt=""> '+jogo.t2;
-      html+=' <span style="font-size:.7rem;color:var(--texto-dim);">'+jogo.data.slice(5).replace('-','/')+' '+jogo.hora+'h</span></div>';
+      html+=' <span style="font-size:.7rem;color:var(--texto-dim)">'+jogo.data.slice(5).replace('-','/')+' '+jogo.hora+'h</span></div>';
       html+='<div class="admin-inputs">';
-      html+='<input type="number" min="0" max="20" placeholder="?" value="'+(r.g1!==''?r.g1:'')+'" id="ar_'+jogo.id+'_g1"/>';
-      html+='<span style="color:var(--texto-dim);font-weight:700;padding:0 3px;">x</span>';
-      html+='<input type="number" min="0" max="20" placeholder="?" value="'+(r.g2!==''?r.g2:'')+'" id="ar_'+jogo.id+'_g2"/>';
-      html+='<button class="btn-admin-save" onclick=\'salvarResultadoLocal(\'+jogo.id+\')\'>✅ Salvar</button>';
-      html+='<button class="btn-admin-clear" onclick=\'limparResultado(\'+jogo.id+\')\'>🗑️ Limpar</button>';
-      html+='<span id="adm_st_'+jogo.id+'" class="status-admin">'+(r.g1!==''?'Salvo: '+r.g1+' x '+r.g2:'')+'</span>';
+      html+='<input type="number" min="0" max="20" placeholder="?" value="'+vg1+'" id="ar_'+jogo.id+'_g1"/>';
+      html+='<span style="color:var(--texto-dim);font-weight:700;padding:0 3px">x</span>';
+      html+='<input type="number" min="0" max="20" placeholder="?" value="'+vg2+'" id="ar_'+jogo.id+'_g2"/>';
+      html+='<button class="btn-admin-save" data-jogo="'+jogo.id+'" data-action="salvar">✅ Salvar</button>';
+      html+='<button class="btn-admin-clear" data-jogo="'+jogo.id+'" data-action="limpar">🗑️ Limpar</button>';
+      html+='<span id="adm_st_'+jogo.id+'" class="status-admin">'+salvo+'</span>';
       html+='</div></div>';
     });
     html+='</div>';
   }
   el.innerHTML=html;
+
+  // Event delegation — um único listener para todos os botões
+  el.addEventListener('click', function(e) {
+    var btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    var jogoId = btn.getAttribute('data-jogo');
+    var action = btn.getAttribute('data-action');
+    if (action === 'salvar') salvarResultadoLocal(jogoId);
+    if (action === 'limpar') limparResultado(jogoId);
+  });
 }
 
 function salvarResultadoLocal(jogoId) {
@@ -8110,7 +8135,7 @@ function renderAdminRanking() {
   ranking.forEach(function(p,i){
     var cls=i===0?'gold':i===1?'silver':i===2?'bronze':'normal';
     var medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
-    html+='<div class="ranking-row" onclick=\'verDetalheAdmin(\'+esc(p.nome)+\')\'>';
+    html+='<div class="ranking-row" data-action="detalhe-admin" data-nome="'+p.nome+'">';
     html+='<div class="rank-pos '+cls+'">'+medal+'</div>';
     html+='<div style="flex:1"><div class="rank-nome">'+p.nome+'</div>';
     html+=(p.exatos>0?'<div style="font-size:.73rem;color:var(--ouro)">⭐ '+p.exatos+' placar(es) exato(s)</div>':'')+'</div>';
@@ -8120,6 +8145,10 @@ function renderAdminRanking() {
   html+='</div>';
   html+='<p style="font-size:.73rem;color:var(--texto-dim);text-align:center;margin-top:8px;">Toque num participante para ver detalhes</p>';
   el.innerHTML=html;
+  el.addEventListener('click',function(e){
+    var row=e.target.closest('[data-action="detalhe-admin"]');
+    if(row) verDetalheAdmin(row.getAttribute('data-nome'));
+  });
 }
 
 function verDetalheAdmin(nome) {
