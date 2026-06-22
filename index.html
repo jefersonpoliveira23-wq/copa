@@ -7912,7 +7912,7 @@ function renderJogos(grupo) {
   html+='<div class="section-sub">Horário de Brasília</div>';
   html+='<div class="filter-bar">';
   grupos.forEach(function(g){
-    html+='<button class="filter-btn'+(filtroAtual===g?' active':'')+'" onclick=\'renderJogos(\'+g+\')\'>'+(g==='todos'?'Todos':'Gr.'+g)+'</button>';
+    html+='<button class="filter-btn'+(filtroAtual===g?' active':'')+'" data-action="filtro-jogo" data-grupo="'+g+'">'+(g==='todos'?'Todos':'Gr.'+g)+'</button>';
   });
   html+='</div>';
   var jogsF=grupo==='todos'?JOGOS:JOGOS.filter(function(j){return j.grupo===grupo;});
@@ -7938,6 +7938,10 @@ function renderJogos(grupo) {
     html+='</div>';
   });
   el.innerHTML=html;
+  el.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-action="filtro-jogo"]');
+    if (btn) renderJogos(btn.getAttribute('data-grupo'));
+  });
 }
 
 // ================================================================
@@ -8250,9 +8254,18 @@ var copaPartidaFiltro = 'todos';
 
 function renderCopa() {
   var el = document.getElementById('tabCopa');
-  var btn1 = '<button class="copa-nav-btn' + (copaView==='classificacao' ? ' active' : '') + '" onclick="copaSetView(\'classificacao\')">📊 Classificação</button>';
-  var btn2 = '<button class="copa-nav-btn' + (copaView==='partidas' ? ' active' : '') + '" onclick="copaSetView(\'partidas\')">⚽ Partidas</button>';
-  el.innerHTML = '<div class="copa-nav">' + btn1 + btn2 + '</div><div id="copaConteudo"></div>';
+  var btn1 = '<button class="copa-nav-btn' + (copaView==='classificacao' ? ' active' : '') + '" data-action="copa-view" data-view="classificacao">📊 Classificação</button>';
+  var btn2 = '<button class="copa-nav-btn' + (copaView==='partidas' ? ' active' : '') + '" data-action="copa-view" data-view="partidas">⚽ Partidas</button>';
+  var elC = document.getElementById('tabCopa');
+  elC.innerHTML = '<div class="copa-nav">' + btn1 + btn2 + '</div><div id="copaConteudo"></div>';
+  elC.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    var action = btn.getAttribute('data-action');
+    if (action === 'copa-view')   copaSetView(btn.getAttribute('data-view'));
+    if (action === 'copa-grupo')  copaMudaGrupo(btn.getAttribute('data-grupo'));
+    if (action === 'copa-filtro') copaFiltroPartida(btn.getAttribute('data-filtro'));
+  });
   if (copaView === 'classificacao') renderStandingsLocal();
   else renderPartidasLocal();
 }
@@ -8311,9 +8324,9 @@ function renderStandingsLocal() {
 
   // Filtro grupos
   html += '<div class="copa-filter-bar">';
-  html += '<button class="copa-filter-btn' + (copaFiltroGrupo==='todos' ? ' active' : '') + '" onclick="copaMudaGrupo(\'todos\')">Todos</button>';
+  html += '<button class="copa-filter-btn' + (copaFiltroGrupo==='todos' ? ' active' : '') + '" data-action="copa-grupo" data-grupo="todos">Todos</button>';
   letras.forEach(function(l) {
-    html += '<button class="copa-filter-btn' + (copaFiltroGrupo===l ? ' active' : '') + '" onclick="copaMudaGrupo(\'' + l + '\')">Grupo ' + l + '</button>';
+    html += '<button class="copa-filter-btn' + (copaFiltroGrupo===l ? ' active' : '') + '" data-action="copa-grupo" data-grupo="'+l+'">Grupo ' + l + '</button>';
   });
   html += '</div>';
 
@@ -8408,7 +8421,7 @@ function renderPartidasLocal() {
 
   html += '<div class="copa-filter-bar">';
   filtros.forEach(function(f) {
-    html += '<button class="copa-filter-btn' + (copaPartidaFiltro===f.id ? ' active' : '') + '" onclick="copaFiltroPartida(\'' + f.id + '\')">' + f.label + '</button>';
+    html += '<button class="copa-filter-btn' + (copaPartidaFiltro===f.id ? ' active' : '') + '" data-action="copa-filtro" data-filtro="'+f.id+'">'+f.label+'</button>';
   });
   html += '</div>';
 
