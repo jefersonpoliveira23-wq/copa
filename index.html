@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ Bolão Copa 2026</title>
+<title>⚽ Bolão Copa 2026 - Mata Mata</title>
 <!-- CryptoJS para criptografia AES -->
 <script>
 ;(function (root, factory) {
@@ -6965,6 +6965,55 @@ main{padding:20px 16px 80px;max-width:960px;margin:0 auto;}
 .login-page .bg-elements { z-index: 0; }
 .login-hero,
 .login-body { position: relative; z-index: 1; }
+/* ══════════════════════════════════
+   CHAVEAMENTO (BRACKET)
+══════════════════════════════════ */
+.bracket-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:12px;}
+.bracket-board{display:flex;align-items:stretch;min-width:950px;height:600px;gap:0;}
+/* Colunas de rounds */
+.bk-col{display:flex;flex-direction:column;flex-shrink:0;}
+.bk-r32{width:118px;}
+.bk-r16{width:112px;}
+.bk-qf{width:112px;}
+.bk-sf{width:112px;}
+.bk-finalc{width:140px;justify-content:center;align-items:center;gap:10px;}
+.bk-col-head{font-family:'Bebas Neue',cursive;font-size:.68rem;color:var(--amarelo);letter-spacing:.8px;text-align:center;padding:0 0 6px;height:22px;box-sizing:border-box;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:3px;}
+.bk-slots{flex:1;display:flex;flex-direction:column;}
+/* Grupos R32 (4 grupos × 2 slots = 8 slots por lado) */
+.bk-group{flex:1;display:flex;flex-direction:column;position:relative;}
+.bk-item{flex:1;display:flex;flex-direction:column;justify-content:center;padding:1px 2px;position:relative;}
+/* Outros rounds */
+.bk-r16i,.bk-qfi,.bk-sfi{flex:1;display:flex;flex-direction:column;justify-content:center;padding:1px 2px;position:relative;}
+/* ── Linhas conectoras (lado esquerdo: saem para a direita) ── */
+.bk-r32.lft .bk-group::after{content:'';position:absolute;right:0;top:25%;height:50%;width:1px;background:var(--borda);}
+.bk-r32.lft .bk-item::after{content:'';position:absolute;right:-9px;top:50%;width:9px;height:1px;background:var(--borda);}
+.bk-r16.lft .bk-r16i::after{content:'';position:absolute;right:-9px;top:50%;width:9px;height:1px;background:var(--borda);}
+.bk-r16.lft .bk-slots::before,.bk-r16.lft .bk-slots::after{display:none;}
+/* Agrupamentos pares R16→QF (vertical nos slots 1+2 e 3+4) */
+.bk-r16.lft .bk-r16i:nth-child(1)::before,.bk-r16.lft .bk-r16i:nth-child(3)::before{content:'';position:absolute;right:0;top:50%;height:100%;width:1px;background:var(--borda);}
+.bk-qf.lft .bk-qfi::after{content:'';position:absolute;right:-9px;top:50%;width:9px;height:1px;background:var(--borda);}
+.bk-qf.lft .bk-qfi:nth-child(1)::before{content:'';position:absolute;right:0;top:50%;height:100%;width:1px;background:var(--borda);}
+.bk-sf.lft .bk-sfi::after{content:'';position:absolute;right:-9px;top:50%;width:9px;height:1px;background:var(--borda);}
+/* ── Linhas conectoras (lado direito: saem para a esquerda) ── */
+.bk-r32.rgt .bk-group::after{content:'';position:absolute;left:0;top:25%;height:50%;width:1px;background:var(--borda);}
+.bk-r32.rgt .bk-item::after{content:'';position:absolute;left:-9px;top:50%;width:9px;height:1px;background:var(--borda);}
+.bk-r16.rgt .bk-r16i::after{content:'';position:absolute;left:-9px;top:50%;width:9px;height:1px;background:var(--borda);}
+.bk-r16.rgt .bk-r16i:nth-child(1)::before,.bk-r16.rgt .bk-r16i:nth-child(3)::before{content:'';position:absolute;left:0;top:50%;height:100%;width:1px;background:var(--borda);}
+.bk-qf.rgt .bk-qfi::after{content:'';position:absolute;left:-9px;top:50%;width:9px;height:1px;background:var(--borda);}
+.bk-qf.rgt .bk-qfi:nth-child(1)::before{content:'';position:absolute;left:0;top:50%;height:100%;width:1px;background:var(--borda);}
+.bk-sf.rgt .bk-sfi::after{content:'';position:absolute;left:-9px;top:50%;width:9px;height:1px;background:var(--borda);}
+/* ── Cards de jogo ── */
+.bk-card{background:var(--card);border:1px solid var(--borda);border-radius:4px;padding:3px 5px;}
+.bk-card.done{border-color:rgba(74,222,128,.5);}
+.bk-team{display:flex;align-items:center;gap:3px;padding:1.5px 0;font-size:.65rem;line-height:1.2;}
+.bk-team img{width:16px;height:11px;flex-shrink:0;object-fit:contain;}
+.bk-n{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:70px;}
+.bk-s{font-family:'Bebas Neue',cursive;font-size:.85rem;color:var(--amarelo);margin-left:auto;padding-left:2px;}
+.bk-team.won{color:var(--verde-claro);font-weight:700;}
+.bk-team.lost{opacity:.35;}
+.bk-tbd{background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.12);border-radius:4px;padding:7px 5px;font-size:.6rem;color:var(--texto-dim);text-align:center;}
+/* Final */
+.bk-final-lbl{font-family:'Bebas Neue',cursive;font-size:.8rem;letter-spacing:1px;text-align:center;}
 </style>
 </head>
 <body>
@@ -6993,21 +7042,21 @@ main{padding:20px 16px 80px;max-width:960px;margin:0 auto;}
   <!-- HERO -->
   <div class="login-hero">
     <div class="login-hero-badge">🏆 Copa do Mundo 2026 · EUA, Canadá e México</div>
-    <div class="login-hero-title">⚽ BOLÃO<br><span>COPA 2026</span></div>
+    <div class="login-hero-title">⚽ BOLÃO<br><span>COPA 2026 · MATA MATA</span></div>
     <p class="login-hero-sub">Preveja os placares, acumule pontos e dispute com os amigos em tempo real.</p>
     <div class="login-hero-stats">
       <div class="login-stat">
-        <div class="login-stat-val">72</div>
+        <div class="login-stat-val">32</div>
         <div class="login-stat-label">Jogos</div>
       </div>
       <div class="login-stat-sep"></div>
       <div class="login-stat">
-        <div class="login-stat-val">12</div>
-        <div class="login-stat-label">Grupos</div>
+        <div class="login-stat-val">5</div>
+        <div class="login-stat-label">Fases</div>
       </div>
       <div class="login-stat-sep"></div>
       <div class="login-stat">
-        <div class="login-stat-val">48</div>
+        <div class="login-stat-val">32</div>
         <div class="login-stat-label">Seleções</div>
       </div>
       <div class="login-stat-sep"></div>
@@ -7128,7 +7177,7 @@ main{padding:20px 16px 80px;max-width:960px;margin:0 auto;}
             <div class="aba-icon">⚽</div>
             <div>
               <div class="aba-nome">Meus Palpites</div>
-              <div class="aba-desc">Preencha e salve seus palpites para todos os 72 jogos da fase de grupos</div>
+              <div class="aba-desc">Preencha e salve seus palpites para todos os 32 jogos do Mata Mata</div>
             </div>
           </div>
           <div class="aba-item">
@@ -7142,7 +7191,7 @@ main{padding:20px 16px 80px;max-width:960px;margin:0 auto;}
             <div class="aba-icon">📋</div>
             <div>
               <div class="aba-nome">Jogos</div>
-              <div class="aba-desc">Tabela completa dos 72 jogos com resultados reais, filtrável por grupo</div>
+              <div class="aba-desc">Tabela completa dos 32 jogos com resultados reais, filtrável por fase</div>
             </div>
           </div>
         </div>
@@ -7240,7 +7289,7 @@ main{padding:20px 16px 80px;max-width:960px;margin:0 auto;}
   </div>
   <div class="header">
     <div class="header-top">
-      <div class="logo">⚽ BOLÃO <span>COPA 2026</span></div>
+      <div class="logo">⚽ BOLÃO <span>COPA 2026 · MATA MATA</span></div>
       <div class="user-badge" onclick="sair()">
         <div class="dot"></div>
         <span id="userBadgeName"></span>
@@ -7252,6 +7301,7 @@ main{padding:20px 16px 80px;max-width:960px;margin:0 auto;}
       <button class="tab" onclick="showTab('ranking')">🏆 Ranking</button>
       <button class="tab" onclick="showTab('jogos')">📋 Jogos</button>
       <button class="tab" onclick="showTab('copa')">🌍 Copa</button>
+      <button class="tab" onclick="showTab('chaveamento')">🏆 Chaveamento</button>
     </div>
   </div>
   <main>
@@ -7259,6 +7309,7 @@ main{padding:20px 16px 80px;max-width:960px;margin:0 auto;}
     <div id="tabRanking" class="screen"></div>
     <div id="tabJogos" class="screen"></div>
     <div id="tabCopa" class="screen"></div>
+    <div id="tabChaveamento" class="screen"></div>
   </main>
 </div>
 
@@ -7311,95 +7362,95 @@ var USUARIOS = {
   'w.santos':    'deizin6',
   'l.melgaco':   'luc2026',
   'd.rodrigues': 'dudex26',
-  'm.medeiros':  'miller2026'
-  // Adicione mais: 'login': 'senha'
+  'm.medeiros':  'miller2026',
+  'r.fernandes': '26rafa',
+  'h.goncalves': 'heidin26'
 };
 // Lista derivada para uso interno
 var LOGINS = Object.keys(USUARIOS);
 
+// Nome de exibição por login (usado no ranking)
+var NOMES = {
+  'j.oliveira':  'Jeferson',
+  'w.santos':    'Willian',
+  'l.melgaco':   'Lucas',
+  'd.rodrigues': 'Daniel',
+  'm.medeiros':  'Miller',
+  'r.fernandes': 'Rafael',
+  'h.goncalves': 'Heider'
+};
+function nomeExib(login) { return NOMES[login] || login; }
+
 var ADMIN_SENHA = '1ateoito'; // Mude para sua senha preferida
 var CRYPTO_KEY  = 'BrasilHexa';   // Chave de criptografia
+
+// 1 = Admin vê os palpites reais antes do jogo começar
+// 0 = Admin vê * x * (anônimo) até o jogo iniciar
+var ADMIN_VER_PALPITES = 0;
 
 // COLE AQUI A URL DO SEU GOOGLE APPS SCRIPT APÓS PUBLICAR:
 var GAS_URL = 'https://script.google.com/macros/s/AKfycbwDSmdzc5qxB0TTYRWGfH7DhaGAE2EftMOz0j0QO3vLzwalL6YcgnLJ54mD08wcUVVfJA/exec';
 
 // ================================================================
-// JOGOS — 48 partidas Copa 2026 (horário Brasília)
+// JOGOS — Mata Mata Copa 2026 (horário Brasília)
 // ================================================================
+// Fases do Mata Mata (usadas no campo grupo para exibição)
+// rodada 1 = Rodada de 32 (16 jogos)
+// rodada 2 = Oitavas de Final (8 jogos)
+// rodada 3 = Quartas de Final (4 jogos)
+// rodada 4 = Semifinal (2 jogos)
+// rodada 5 = Final + 3º Lugar (2 jogos)
 var JOGOS = [
-  {id:'A1',grupo:'A',rodada:1,data:'2026-06-11',hora:'16:00',f1:'mx',t1:'México',f2:'za',t2:'África do Sul',cidade:'Cidade do México'},
-  {id:'A2',grupo:'A',rodada:1,data:'2026-06-11',hora:'23:00',f1:'kr',t1:'Coreia do Sul',f2:'cz',t2:'Rep. Tcheca',cidade:'Guadalajara'},
-  {id:'B1',grupo:'B',rodada:1,data:'2026-06-12',hora:'16:00',f1:'ca',t1:'Canadá',f2:'ba',t2:'Bósnia e Herz.',cidade:'Toronto'},
-  {id:'D1',grupo:'D',rodada:1,data:'2026-06-12',hora:'22:00',f1:'us',t1:'Estados Unidos',f2:'py',t2:'Paraguai',cidade:'Los Angeles'},
-  {id:'D2',grupo:'D',rodada:1,data:'2026-06-14',hora:'01:00',f1:'au',t1:'Austrália',f2:'tr',t2:'Turquia',cidade:'Vancouver'},
-  {id:'B2',grupo:'B',rodada:1,data:'2026-06-13',hora:'16:00',f1:'qa',t1:'Catar',f2:'ch',t2:'Suíça',cidade:'San Francisco'},
-  {id:'C1',grupo:'C',rodada:1,data:'2026-06-13',hora:'19:00',f1:'br',t1:'Brasil',f2:'ma',t2:'Marrocos',cidade:'Nova York/NJ'},
-  {id:'C2',grupo:'C',rodada:1,data:'2026-06-13',hora:'22:00',f1:'ht',t1:'Haiti',f2:'gb-sct',t2:'Escócia',cidade:'Boston'},
-  {id:'E1',grupo:'E',rodada:1,data:'2026-06-14',hora:'14:00',f1:'de',t1:'Alemanha',f2:'cw',t2:'Curaçao',cidade:'Houston'},
-  {id:'F1',grupo:'F',rodada:1,data:'2026-06-14',hora:'17:00',f1:'nl',t1:'Holanda',f2:'jp',t2:'Japão',cidade:'Dallas'},
-  {id:'E2',grupo:'E',rodada:1,data:'2026-06-14',hora:'20:00',f1:'ci',t1:'Costa do Marfim',f2:'ec',t2:'Equador',cidade:'Filadélfia'},
-  {id:'F2',grupo:'F',rodada:1,data:'2026-06-14',hora:'23:00',f1:'se',t1:'Suécia',f2:'tn',t2:'Tunísia',cidade:'Monterrey'},
-  {id:'H1',grupo:'H',rodada:1,data:'2026-06-15',hora:'13:00',f1:'es',t1:'Espanha',f2:'cv',t2:'Cabo Verde',cidade:'Atlanta'},
-  {id:'G1',grupo:'G',rodada:1,data:'2026-06-15',hora:'16:00',f1:'be',t1:'Bélgica',f2:'eg',t2:'Egito',cidade:'Seattle'},
-  {id:'H2',grupo:'H',rodada:1,data:'2026-06-15',hora:'19:00',f1:'sa',t1:'Arábia Saudita',f2:'uy',t2:'Uruguai',cidade:'Miami'},
-  {id:'G2',grupo:'G',rodada:1,data:'2026-06-15',hora:'22:00',f1:'ir',t1:'Irã',f2:'nz',t2:'Nova Zelândia',cidade:'Los Angeles'},
-  {id:'J1',grupo:'J',rodada:1,data:'2026-06-16',hora:'14:00',f1:'ar',t1:'Argentina',f2:'dz',t2:'Argélia',cidade:'Kansas City'},
-  {id:'I1',grupo:'I',rodada:1,data:'2026-06-16',hora:'16:00',f1:'fr',t1:'França',f2:'sn',t2:'Senegal',cidade:'Nova York/NJ'},
-  {id:'I2',grupo:'I',rodada:1,data:'2026-06-16',hora:'19:00',f1:'iq',t1:'Iraque',f2:'no',t2:'Noruega',cidade:'Boston'},
-  {id:'J2',grupo:'J',rodada:1,data:'2026-06-17',hora:'01:00',f1:'at',t1:'Áustria',f2:'jo',t2:'Jordânia',cidade:'San Francisco'},
-  {id:'K1',grupo:'K',rodada:1,data:'2026-06-17',hora:'14:00',f1:'pt',t1:'Portugal',f2:'cd',t2:'RD Congo',cidade:'Houston'},
-  {id:'L1',grupo:'L',rodada:1,data:'2026-06-17',hora:'17:00',f1:'gb-eng',t1:'Inglaterra',f2:'hr',t2:'Croácia',cidade:'Dallas'},
-  {id:'L2',grupo:'L',rodada:1,data:'2026-06-17',hora:'20:00',f1:'gh',t1:'Gana',f2:'pa',t2:'Panamá',cidade:'Toronto'},
-  {id:'K2',grupo:'K',rodada:1,data:'2026-06-17',hora:'23:00',f1:'uz',t1:'Uzbequistão',f2:'co',t2:'Colômbia',cidade:'Cidade do México'},
-  {id:'A3',grupo:'A',rodada:2,data:'2026-06-18',hora:'13:00',f1:'cz',t1:'Rep. Tcheca',f2:'za',t2:'África do Sul',cidade:'Atlanta'},
-  {id:'B3',grupo:'B',rodada:2,data:'2026-06-18',hora:'16:00',f1:'ch',t1:'Suíça',f2:'ba',t2:'Bósnia e Herz.',cidade:'Los Angeles'},
-  {id:'B4',grupo:'B',rodada:2,data:'2026-06-18',hora:'19:00',f1:'ca',t1:'Canadá',f2:'qa',t2:'Catar',cidade:'Vancouver'},
-  {id:'A4',grupo:'A',rodada:2,data:'2026-06-18',hora:'22:00',f1:'mx',t1:'México',f2:'kr',t2:'Coreia do Sul',cidade:'Guadalajara'},
-  {id:'D3',grupo:'D',rodada:2,data:'2026-06-19',hora:'01:00',f1:'tr',t1:'Turquia',f2:'py',t2:'Paraguai',cidade:'San Francisco'},
-  {id:'D4',grupo:'D',rodada:2,data:'2026-06-19',hora:'16:00',f1:'us',t1:'Estados Unidos',f2:'au',t2:'Austrália',cidade:'Seattle'},
-  {id:'C3',grupo:'C',rodada:2,data:'2026-06-19',hora:'19:00',f1:'gb-sct',t1:'Escócia',f2:'ma',t2:'Marrocos',cidade:'Boston'},
-  {id:'C4',grupo:'C',rodada:2,data:'2026-06-19',hora:'22:00',f1:'br',t1:'Brasil',f2:'ht',t2:'Haiti',cidade:'Filadélfia'},
-  {id:'F3',grupo:'F',rodada:2,data:'2026-06-20',hora:'14:00',f1:'nl',t1:'Holanda',f2:'se',t2:'Suécia',cidade:'Houston'},
-  {id:'E3',grupo:'E',rodada:2,data:'2026-06-20',hora:'17:00',f1:'de',t1:'Alemanha',f2:'ci',t2:'Costa do Marfim',cidade:'Toronto'},
-  {id:'E4',grupo:'E',rodada:2,data:'2026-06-20',hora:'21:00',f1:'ec',t1:'Equador',f2:'cw',t2:'Curaçao',cidade:'Kansas City'},
-  {id:'F4',grupo:'F',rodada:2,data:'2026-06-21',hora:'01:00',f1:'tn',t1:'Tunísia',f2:'jp',t2:'Japão',cidade:'Monterrey'},
-  {id:'H3',grupo:'H',rodada:2,data:'2026-06-21',hora:'13:00',f1:'es',t1:'Espanha',f2:'sa',t2:'Arábia Saudita',cidade:'Atlanta'},
-  {id:'G3',grupo:'G',rodada:2,data:'2026-06-21',hora:'16:00',f1:'be',t1:'Bélgica',f2:'ir',t2:'Irã',cidade:'Los Angeles'},
-  {id:'H4',grupo:'H',rodada:2,data:'2026-06-21',hora:'19:00',f1:'uy',t1:'Uruguai',f2:'cv',t2:'Cabo Verde',cidade:'Miami'},
-  {id:'G4',grupo:'G',rodada:2,data:'2026-06-21',hora:'22:00',f1:'nz',t1:'Nova Zelândia',f2:'eg',t2:'Egito',cidade:'Vancouver'},
-  {id:'J3',grupo:'J',rodada:2,data:'2026-06-22',hora:'14:00',f1:'ar',t1:'Argentina',f2:'at',t2:'Áustria',cidade:'Dallas'},
-  {id:'I3',grupo:'I',rodada:2,data:'2026-06-22',hora:'18:00',f1:'fr',t1:'França',f2:'iq',t2:'Iraque',cidade:'Filadélfia'},
-  {id:'I4',grupo:'I',rodada:2,data:'2026-06-22',hora:'21:00',f1:'no',t1:'Noruega',f2:'sn',t2:'Senegal',cidade:'Nova York/NJ'},
-  {id:'J4',grupo:'J',rodada:2,data:'2026-06-23',hora:'00:00',f1:'jo',t1:'Jordânia',f2:'dz',t2:'Argélia',cidade:'San Francisco'},
-  {id:'L3',grupo:'L',rodada:2,data:'2026-06-23',hora:'14:00',f1:'pt',t1:'Portugal',f2:'uz',t2:'Uzbequistão',cidade:'Houston'},
-  {id:'L4',grupo:'L',rodada:2,data:'2026-06-23',hora:'17:00',f1:'gb-eng',t1:'Inglaterra',f2:'gh',t2:'Gana',cidade:'Boston'},
-  {id:'K3',grupo:'K',rodada:2,data:'2026-06-23',hora:'20:00',f1:'pa',t1:'Panamá',f2:'hr',t2:'Croácia',cidade:'Toronto'},
-  {id:'K4',grupo:'K',rodada:2,data:'2026-06-23',hora:'23:00',f1:'co',t1:'Colômbia',f2:'cd',t2:'RD Congo',cidade:'Guadalajara'},
-  {id:'B5',grupo:'B',rodada:3,data:'2026-06-24',hora:'16:00',f1:'ch',t1:'Suíça',f2:'ca',t2:'Canadá',cidade:'Vancouver'},
-  {id:'B6',grupo:'B',rodada:3,data:'2026-06-24',hora:'16:00',f1:'ba',t1:'Bósnia e Herz.',f2:'qa',t2:'Catar',cidade:'Seattle'},
-  {id:'C5',grupo:'C',rodada:3,data:'2026-06-24',hora:'19:00',f1:'gb-sct',t1:'Escócia',f2:'br',t2:'Brasil',cidade:'Miami'},
-  {id:'C6',grupo:'C',rodada:3,data:'2026-06-24',hora:'19:00',f1:'ma',t1:'Marrocos',f2:'ht',t2:'Haiti',cidade:'Atlanta'},
-  {id:'A5',grupo:'A',rodada:3,data:'2026-06-24',hora:'22:00',f1:'cz',t1:'Rep. Tcheca',f2:'mx',t2:'México',cidade:'Cidade do México'},
-  {id:'A6',grupo:'A',rodada:3,data:'2026-06-24',hora:'22:00',f1:'za',t1:'África do Sul',f2:'kr',t2:'Coreia do Sul',cidade:'Monterrey'},
-  {id:'E5',grupo:'E',rodada:3,data:'2026-06-25',hora:'17:00',f1:'ec',t1:'Equador',f2:'de',t2:'Alemanha',cidade:'Nova York/NJ'},
-  {id:'E6',grupo:'E',rodada:3,data:'2026-06-25',hora:'17:00',f1:'cw',t1:'Curaçao',f2:'ci',t2:'Costa do Marfim',cidade:'Filadélfia'},
-  {id:'F5',grupo:'F',rodada:3,data:'2026-06-25',hora:'20:00',f1:'tn',t1:'Tunísia',f2:'nl',t2:'Holanda',cidade:'Houston'},
-  {id:'F6',grupo:'F',rodada:3,data:'2026-06-25',hora:'20:00',f1:'jp',t1:'Japão',f2:'se',t2:'Suécia',cidade:'Dallas'},
-  {id:'D5',grupo:'D',rodada:3,data:'2026-06-25',hora:'23:00',f1:'py',t1:'Paraguai',f2:'au',t2:'Austrália',cidade:'Kansas City'},
-  {id:'D6',grupo:'D',rodada:3,data:'2026-06-25',hora:'23:00',f1:'tr',t1:'Turquia',f2:'us',t2:'Estados Unidos',cidade:'Los Angeles'},
-  {id:'I5',grupo:'I',rodada:3,data:'2026-06-26',hora:'16:00',f1:'no',t1:'Noruega',f2:'fr',t2:'França',cidade:'Boston'},
-  {id:'I6',grupo:'I',rodada:3,data:'2026-06-26',hora:'16:00',f1:'sn',t1:'Senegal',f2:'iq',t2:'Iraque',cidade:'Vancouver'},
-  {id:'H5',grupo:'H',rodada:3,data:'2026-06-26',hora:'21:00',f1:'cv',t1:'Cabo Verde',f2:'sa',t2:'Arábia Saudita',cidade:'Miami'},
-  {id:'H6',grupo:'H',rodada:3,data:'2026-06-26',hora:'21:00',f1:'uy',t1:'Uruguai',f2:'es',t2:'Espanha',cidade:'Atlanta'},
-  {id:'G5',grupo:'G',rodada:3,data:'2026-06-27',hora:'00:00',f1:'eg',t1:'Egito',f2:'ir',t2:'Irã',cidade:'Dallas'},
-  {id:'G6',grupo:'G',rodada:3,data:'2026-06-27',hora:'00:00',f1:'nz',t1:'Nova Zelândia',f2:'be',t2:'Belgica',cidade:'Toronto'},
-  {id:'L5',grupo:'L',rodada:3,data:'2026-06-27',hora:'18:00',f1:'pa',t1:'Panamá',f2:'gb-eng',t2:'Inglaterra',cidade:'Kansas City'},
-  {id:'L6',grupo:'L',rodada:3,data:'2026-06-27',hora:'18:00',f1:'hr',t1:'Croácia',f2:'gh',t2:'Gana',cidade:'Houston'},
-  {id:'K5',grupo:'K',rodada:3,data:'2026-06-27',hora:'20:30',f1:'co',t1:'Colômbia',f2:'pt',t2:'Portugal',cidade:'Atlanta'},
-  {id:'K6',grupo:'K',rodada:3,data:'2026-06-27',hora:'20:30',f1:'cd',t1:'RD Congo',f2:'uz',t2:'Uzbequistão',cidade:'Seattle'},
-  {id:'J5',grupo:'J',rodada:3,data:'2026-06-27',hora:'23:00',f1:'jo',t1:'Jordânia',f2:'ar',t2:'Argentina',cidade:'Los Angeles'},
-  {id:'J6',grupo:'J',rodada:3,data:'2026-06-27',hora:'23:00',f1:'dz',t1:'Argélia',f2:'at',t2:'Áustria',cidade:'San Francisco'}
+  // ── RODADA DE 32 (16 jogos) ──
+  {id:'M49',grupo:'Rodada de 32',rodada:1,data:'2026-06-28',hora:'16:00',f1:'za',t1:'África do Sul',f2:'ca',t2:'Canadá',cidade:'A confirmar'},
+  {id:'M50',grupo:'Rodada de 32',rodada:1,data:'2026-06-29',hora:'14:00',f1:'br',t1:'Brasil',f2:'jp',t2:'Japão',cidade:'A confirmar'},
+  {id:'M51',grupo:'Rodada de 32',rodada:1,data:'2026-06-29',hora:'17:30',f1:'de',t1:'Alemanha',f2:'py',t2:'Paraguai',cidade:'A confirmar'},
+  {id:'M52',grupo:'Rodada de 32',rodada:1,data:'2026-06-29',hora:'22:00',f1:'nl',t1:'Holanda',f2:'ma',t2:'Marrocos',cidade:'A confirmar'},
+  {id:'M53',grupo:'Rodada de 32',rodada:1,data:'2026-06-30',hora:'14:00',f1:'ci',t1:'Costa do Marfim',f2:'no',t2:'Noruega',cidade:'A confirmar'},
+  {id:'M54',grupo:'Rodada de 32',rodada:1,data:'2026-06-30',hora:'18:00',f1:'fr',t1:'França',f2:'se',t2:'Suécia',cidade:'A confirmar'},
+  {id:'M55',grupo:'Rodada de 32',rodada:1,data:'2026-06-30',hora:'22:00',f1:'mx',t1:'México',f2:'ec',t2:'Equador',cidade:'A confirmar'},
+  {id:'M56',grupo:'Rodada de 32',rodada:1,data:'2026-07-01',hora:'13:00',f1:'gb-eng',t1:'Inglaterra',f2:'cd',t2:'RD Congo',cidade:'A confirmar'},
+  {id:'M57',grupo:'Rodada de 32',rodada:1,data:'2026-07-01',hora:'17:00',f1:'be',t1:'Bélgica',f2:'sn',t2:'Senegal',cidade:'A confirmar'},
+  {id:'M58',grupo:'Rodada de 32',rodada:1,data:'2026-07-01',hora:'21:00',f1:'us',t1:'Estados Unidos',f2:'ba',t2:'Bósnia',cidade:'A confirmar'},
+  {id:'M59',grupo:'Rodada de 32',rodada:1,data:'2026-07-02',hora:'16:00',f1:'es',t1:'Espanha',f2:'at',t2:'Áustria',cidade:'A confirmar'},
+  {id:'M60',grupo:'Rodada de 32',rodada:1,data:'2026-07-02',hora:'20:00',f1:'pt',t1:'Portugal',f2:'hr',t2:'Croácia',cidade:'A confirmar'},
+  {id:'M61',grupo:'Rodada de 32',rodada:1,data:'2026-07-03',hora:'00:00',f1:'ch',t1:'Suíça',f2:'dz',t2:'Argélia',cidade:'A confirmar'},
+  {id:'M62',grupo:'Rodada de 32',rodada:1,data:'2026-07-03',hora:'15:00',f1:'au',t1:'Austrália',f2:'eg',t2:'Egito',cidade:'A confirmar'},
+  {id:'M63',grupo:'Rodada de 32',rodada:1,data:'2026-07-03',hora:'19:00',f1:'ar',t1:'Argentina',f2:'cv',t2:'Cabo Verde',cidade:'A confirmar'},
+  {id:'M64',grupo:'Rodada de 32',rodada:1,data:'2026-07-03',hora:'22:30',f1:'co',t1:'Colômbia',f2:'gh',t2:'Gana',cidade:'A confirmar'},
+  // ── OITAVAS DE FINAL (8 jogos) — chaveamento conforme bracket oficial ──
+  // Esquerda cima: M51 x M54 → M65 | M49 x M52 → M66
+  // Esquerda baixo: M59 x M60 → M67 | M57 x M58 → M68
+  // Direita cima:  M50 x M53 → M69 | M55 x M56 → M70
+  // Direita baixo: M63 x M62 → M71 | M61 x M64 → M72
+  {id:'M65',grupo:'Oitavas de Final',rodada:2,data:'2026-07-14',hora:'16:00',f1:'un',t1:'Venc. M51',f2:'un',t2:'Venc. M54',cidade:'A definir'},
+  {id:'M66',grupo:'Oitavas de Final',rodada:2,data:'2026-07-14',hora:'20:00',f1:'un',t1:'Venc. M49',f2:'un',t2:'Venc. M52',cidade:'A definir'},
+  {id:'M67',grupo:'Oitavas de Final',rodada:2,data:'2026-07-15',hora:'16:00',f1:'un',t1:'Venc. M59',f2:'un',t2:'Venc. M60',cidade:'A definir'},
+  {id:'M68',grupo:'Oitavas de Final',rodada:2,data:'2026-07-15',hora:'20:00',f1:'un',t1:'Venc. M57',f2:'un',t2:'Venc. M58',cidade:'A definir'},
+  {id:'M69',grupo:'Oitavas de Final',rodada:2,data:'2026-07-16',hora:'16:00',f1:'un',t1:'Venc. M50',f2:'un',t2:'Venc. M53',cidade:'A definir'},
+  {id:'M70',grupo:'Oitavas de Final',rodada:2,data:'2026-07-16',hora:'20:00',f1:'un',t1:'Venc. M55',f2:'un',t2:'Venc. M56',cidade:'A definir'},
+  {id:'M71',grupo:'Oitavas de Final',rodada:2,data:'2026-07-17',hora:'16:00',f1:'un',t1:'Venc. M63',f2:'un',t2:'Venc. M62',cidade:'A definir'},
+  {id:'M72',grupo:'Oitavas de Final',rodada:2,data:'2026-07-17',hora:'20:00',f1:'un',t1:'Venc. M61',f2:'un',t2:'Venc. M64',cidade:'A definir'},
+  // ── QUARTAS DE FINAL (4 jogos) ──
+  {id:'M73',grupo:'Quartas de Final',rodada:3,data:'2026-07-21',hora:'16:00',f1:'un',t1:'Venc. M65',f2:'un',t2:'Venc. M66',cidade:'A definir'},
+  {id:'M74',grupo:'Quartas de Final',rodada:3,data:'2026-07-21',hora:'20:00',f1:'un',t1:'Venc. M67',f2:'un',t2:'Venc. M68',cidade:'A definir'},
+  {id:'M75',grupo:'Quartas de Final',rodada:3,data:'2026-07-22',hora:'16:00',f1:'un',t1:'Venc. M69',f2:'un',t2:'Venc. M70',cidade:'A definir'},
+  {id:'M76',grupo:'Quartas de Final',rodada:3,data:'2026-07-22',hora:'20:00',f1:'un',t1:'Venc. M71',f2:'un',t2:'Venc. M72',cidade:'A definir'},
+  // ── SEMIFINAL (2 jogos) ──
+  {id:'M77',grupo:'Semifinal',rodada:4,data:'2026-07-25',hora:'16:00',f1:'un',t1:'Venc. M73',f2:'un',t2:'Venc. M74',cidade:'A definir'},
+  {id:'M78',grupo:'Semifinal',rodada:4,data:'2026-07-26',hora:'20:00',f1:'un',t1:'Venc. M75',f2:'un',t2:'Venc. M76',cidade:'A definir'},
+  // ── FINAL + 3º LUGAR ──
+  {id:'M79',grupo:'3º Lugar',rodada:5,data:'2026-07-29',hora:'16:00',f1:'un',t1:'Perd. M77',f2:'un',t2:'Perd. M78',cidade:'A definir'},
+  {id:'M80',grupo:'Final',rodada:5,data:'2026-07-30',hora:'16:00',f1:'un',t1:'Venc. M77',f2:'un',t2:'Venc. M78',cidade:'Nova York/NJ'}
 ];
+
+var FASES_NOMES = {
+  1: 'Rodada de 32',
+  2: 'Oitavas de Final',
+  3: 'Quartas de Final',
+  4: 'Semifinal',
+  5: 'Final + 3º Lugar'
+};
 
 // ================================================================
 // ESTADO GLOBAL
@@ -7535,7 +7586,7 @@ function gasCarregarResultados(callback) {
 window.addEventListener('load', function() {
   document.getElementById('loginSelect').focus();
   // Cache local de resultados (usado enquanto a planilha não responde)
-  var r = localStorage.getItem('bolao26_resultados');
+  var r = localStorage.getItem('bolao26mm_resultados');
   if (r) { try { resultadosCache = JSON.parse(r); } catch(e){} }
   // Busca resultados oficiais da planilha (RESULTADOS), válidos para todos os usuários
   carregarResultadosDaPlanilha(function(){});
@@ -7553,7 +7604,7 @@ function carregarResultadosDaPlanilha(callback) {
         novo[linha.jogo_id] = {g1: String(linha.g1), g2: String(linha.g2)};
       });
       resultadosCache = novo;
-      localStorage.setItem('bolao26_resultados', JSON.stringify(resultadosCache));
+      localStorage.setItem('bolao26mm_resultados', JSON.stringify(resultadosCache));
     }
     if (callback) callback(resp);
   });
@@ -7632,7 +7683,7 @@ function entrar() {
   campoLogin.value = '';
   campoSenha.value = '';
   // Carrega palpites do cache local
-  var cached = localStorage.getItem('bolao26_palpites_' + loginValido);
+  var cached = localStorage.getItem('bolao26mm_palpites_' + loginValido);
   if (cached) { try { palpitesCache[loginValido] = JSON.parse(cached); } catch(e){} }
   showTab('palpites');
 }
@@ -7675,16 +7726,17 @@ function sairAdmin() {
 // TABS
 // ================================================================
 function showTab(tab) {
-  ['palpites','ranking','jogos','copa'].forEach(function(t,i){
+  ['palpites','ranking','jogos','copa','chaveamento'].forEach(function(t,i){
     var el = document.querySelectorAll('#appScreen .tab')[i];
     if (el) el.classList.toggle('active', t===tab);
     var div = document.getElementById('tab'+cap(t));
     if (div) div.classList.toggle('active', t===tab);
   });
-  if (tab==='palpites') renderPalpites();
-  if (tab==='ranking')  carregarDadosRanking(renderRanking);
-  if (tab==='jogos')    renderJogos('todos');
-  if (tab==='copa')     renderCopa();
+  if (tab==='palpites')     renderPalpites();
+  if (tab==='ranking')      carregarDadosRanking(renderRanking);
+  if (tab==='jogos')        renderJogos('todos');
+  if (tab==='copa')         renderCopa();
+  if (tab==='chaveamento')  renderChaveamento();
 }
 function showAdminTab(tab) {
   ['palpites','resultados','ranking','participantes'].forEach(function(t,i){
@@ -7714,19 +7766,23 @@ function renderPalpites() {
   });
 
   var html='<div class="section-title">MEUS PALPITES</div>';
-  html+='<div class="section-sub">Salve antes do jogo começar. Você pode editar até o horário de início.</div>';
+  html+='<div class="section-sub">Mata Mata · Salve antes do jogo começar. Você pode editar até o horário de início.</div>';
   html+='<div class="stats-bar">';
   html+='<div class="stat-pill">⚽ Salvos: <strong>'+salvos+'/'+JOGOS.length+'</strong></div>';
   html+='<div class="stat-pill">🏆 Pontos: <strong>'+totalPts+'</strong></div>';
   html+='<div class="stat-pill">⭐ Exatos: <strong>'+exatos+'</strong></div>';
   html+='</div>';
 
-  for(var rod=1;rod<=3;rod++){
+  var rodsUnicas=[];
+  JOGOS.forEach(function(j){if(rodsUnicas.indexOf(j.rodada)===-1)rodsUnicas.push(j.rodada);});
+  rodsUnicas.sort(function(a,b){return a-b;});
+  rodsUnicas.forEach(function(rod){
     var jogsR=JOGOS.filter(function(j){return j.rodada===rod;});
     var datas=[];
     jogsR.forEach(function(j){if(datas.indexOf(j.data)===-1)datas.push(j.data);});
     datas.sort();
-    html+='<div class="rodada-bloco"><div class="rodada-label">⚽ RODADA '+rod+'</div>';
+    var faseLabel = FASES_NOMES[rod] || ('Rodada '+rod);
+    html+='<div class="rodada-bloco"><div class="rodada-label">⚽ '+faseLabel+'</div>';
     datas.forEach(function(data){
       var d=new Date(data+'T12:00:00');
       var nomeDia=d.toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'});
@@ -7736,7 +7792,7 @@ function renderPalpites() {
       });
     });
     html+='</div>';
-  }
+  });
   el.innerHTML = html;
 
   // Event delegation para botões de palpite
@@ -7762,7 +7818,7 @@ function buildCardPalpite(jogo, palpite, resultado) {
   var vg2      = (palpite&&palpite.g2!=='') ? palpite.g2 : '';
 
   var h = '<div class="'+cardCls+'" id="card_'+jogo.id+'">';
-  h += '<div class="jogo-meta"><span class="jogo-grupo-tag">GRUPO '+jogo.grupo+' · '+jogo.cidade+'</span>';
+  h += '<div class="jogo-meta"><span class="jogo-grupo-tag">'+jogo.data.slice(5).replace('-','/')+' · '+jogo.cidade+'</span>';
   h += '<span class="jogo-hora-tag">'+(travado?'🔒 ':'⏰ ')+jogo.hora+'h</span></div>';
   h += '<div class="confronto">';
   h += '<div class="time-bloco"><span class="flag"><img src="https://flagcdn.com/24x18/'+jogo.f1+'.png" class="flag"></span><span class="time-nome-txt">'+jogo.t1+'</span></div>';
@@ -7820,7 +7876,7 @@ function salvarPalpiteCard(jogoId) {
       // Atualiza cache local
       if(!palpitesCache[currentUser]) palpitesCache[currentUser]={};
       palpitesCache[currentUser][jogoId]={g1:g1,g2:g2};
-      localStorage.setItem('bolao26_palpites_'+currentUser, JSON.stringify(palpitesCache[currentUser]));
+      localStorage.setItem('bolao26mm_palpites_'+currentUser, JSON.stringify(palpitesCache[currentUser]));
       editando[jogoId]=false;
       showToast('✅ Palpite salvo: '+g1+' x '+g2);
       renderPalpites();
@@ -7886,7 +7942,7 @@ function renderRanking() {
     var bg=p.nome===currentUser?'background:rgba(26,122,60,.1);':'';
     html+='<div class="ranking-row" style="'+bg+'" data-action="detalhe" data-nome="'+p.nome+'">';
     html+='<div class="rank-pos '+cls+'">'+medal+'</div>';
-    html+='<div style="flex:1"><div class="rank-nome">'+p.nome+(p.nome===currentUser?' 👈':'')+'</div>';
+    html+='<div style="flex:1"><div class="rank-nome">'+nomeExib(p.nome)+(p.nome===currentUser?' 👈':'')+'</div>';
     html+=(p.exatos>0?'<div style="font-size:.73rem;color:var(--ouro)">⭐ '+p.exatos+' placar(es) exato(s)</div>':'')+'</div>';
     html+='<div style="text-align:right"><div class="rank-pts">'+p.total+'</div><div class="rank-stats">'+p.feitos+'/'+JOGOS.length+'</div></div>';
     html+='</div>';
@@ -7907,12 +7963,12 @@ var filtroAtual='todos';
 function renderJogos(grupo) {
   filtroAtual=grupo;
   var el=document.getElementById('tabJogos');
-  var grupos=['todos','A','B','C','D','E','F','G','H','I','J','K','L'];
+  var fasesDisponiveis=['todos'].concat(Object.values(FASES_NOMES).filter(function(v,i,a){return a.indexOf(v)===i;}));
   var html='<div class="section-title">TABELA DE JOGOS</div>';
   html+='<div class="section-sub">Horário de Brasília</div>';
   html+='<div class="filter-bar">';
-  grupos.forEach(function(g){
-    html+='<button class="filter-btn'+(filtroAtual===g?' active':'')+'" data-action="filtro-jogo" data-grupo="'+g+'">'+(g==='todos'?'Todos':'Gr.'+g)+'</button>';
+  fasesDisponiveis.forEach(function(g){
+    html+='<button class="filter-btn'+(filtroAtual===g?' active':'')+'" data-action="filtro-jogo" data-grupo="'+g+'">'+(g==='todos'?'Todos':g)+'</button>';
   });
   html+='</div>';
   var jogsF=grupo==='todos'?JOGOS:JOGOS.filter(function(j){return j.grupo===grupo;});
@@ -7920,12 +7976,13 @@ function renderJogos(grupo) {
   jogsF.forEach(function(j){if(rodadas.indexOf(j.rodada)===-1)rodadas.push(j.rodada);});
   rodadas.sort();
   rodadas.forEach(function(rod){
-    html+='<div class="rodada-bloco"><div class="rodada-label">⚽ RODADA '+rod+'</div>';
+    var faseLabel = FASES_NOMES[rod] || ('Rodada '+rod);
+    html+='<div class="rodada-bloco"><div class="rodada-label">⚽ '+faseLabel+'</div>';
     jogsF.filter(function(j){return j.rodada===rod;}).forEach(function(jogo){
       var r=resultadosCache[jogo.id];
       var travado=jogoTravado(jogo);
       html+='<div class="jogo-card'+(travado?' locked':'')+'"><div class="jogo-meta">';
-      html+='<span class="jogo-grupo-tag">GRUPO '+jogo.grupo+' · '+jogo.cidade+'</span>';
+      html+='<span class="jogo-grupo-tag">'+jogo.data.slice(5).replace('-','/')+' · '+jogo.cidade+'</span>';
       html+='<span class="jogo-hora-tag">'+jogo.data.slice(5).replace('-','/')+' '+jogo.hora+'h</span></div>';
       html+='<div class="confronto">';
       html+='<div class="time-bloco"><img class="flag" src="https://flagcdn.com/24x18/'+jogo.f1+'.png" alt=""><span class="time-nome-txt">'+jogo.t1+'</span></div>';
@@ -8001,8 +8058,12 @@ function buildAdminPalpitesView() {
   if(!cacheCarregado) return '<div class="empty-state"><div class="icon">📊</div><p>Nenhum dado carregado.</p></div>';
 
   var html='';
-  for(var rod=1;rod<=3;rod++){
-    html+='<div class="rodada-bloco"><div class="rodada-label">⚽ RODADA '+rod+'</div>';
+  var rodsAdm=[];
+  JOGOS.forEach(function(j){if(rodsAdm.indexOf(j.rodada)===-1)rodsAdm.push(j.rodada);});
+  rodsAdm.sort(function(a,b){return a-b;});
+  rodsAdm.forEach(function(rod){
+    var faseLabel = FASES_NOMES[rod] || ('Rodada '+rod);
+    html+='<div class="rodada-bloco"><div class="rodada-label">⚽ '+faseLabel+'</div>';
     JOGOS.filter(function(j){return j.rodada===rod;}).forEach(function(jogo){
       var r=resultadosCache[jogo.id];
       html+='<div class="admin-card">';
@@ -8011,13 +8072,18 @@ function buildAdminPalpitesView() {
       if(r&&r.g1!=='') html+=' <span style="font-size:.78rem;color:var(--amarelo);margin-left:8px;">✅ Real: '+r.g1+' x '+r.g2+'</span>';
       html+='</div>';
       // Linha por usuário
+      var iniciado = jogoTravado(jogo);
       LOGINS.forEach(function(login){
         var p=(palpitesCache[login]||{})[jogo.id];
         var pts=calcPontos(p,r);
         var ptsCls=pts===null?'pts-0':pts===7?'pts-7':pts>=5?'pts-5':pts>=2?'pts-2':'pts-0';
         html+='<div class="palpites-view-row">';
-        html+='<div class="pv-usuario">👤 '+login+'</div>';
-        if(p&&p.g1!==''&&p.g2!==''){
+        html+='<div class="pv-usuario">👤 '+nomeExib(login)+'</div>';
+        if(!iniciado && !ADMIN_VER_PALPITES){
+          // Jogo ainda não começou e flag = 0: oculta palpite
+          var temP = p&&p.g1!==''&&p.g2!=='';
+          html+='<div class="pv-sem">'+(temP?'* x *':'sem palpite')+'</div><div></div>';
+        } else if(p&&p.g1!==''&&p.g2!==''){
           html+='<div class="pv-palpite">'+p.g1+' x '+p.g2+'</div>';
           html+='<div class="pv-pts '+ptsCls+'">'+(pts!==null?pts+' pts':'—')+'</div>';
         } else {
@@ -8028,7 +8094,7 @@ function buildAdminPalpitesView() {
       html+='</div>';
     });
     html+='</div>';
-  }
+  });
   return html;
 }
 
@@ -8039,8 +8105,12 @@ function renderAdminResultados() {
   var el=document.getElementById('adminTabResultados');
   var html='<div class="section-title">INSERIR RESULTADOS</div>';
   html+='<div class="section-sub">Insira o placar real após o término de cada jogo</div>';
-  for(var rod=1;rod<=3;rod++){
-    html+='<div class="rodada-bloco"><div class="rodada-label">⚽ RODADA '+rod+'</div>';
+  var rodsRes=[];
+  JOGOS.forEach(function(j){if(rodsRes.indexOf(j.rodada)===-1)rodsRes.push(j.rodada);});
+  rodsRes.sort(function(a,b){return a-b;});
+  rodsRes.forEach(function(rod){
+    var faseLabel = FASES_NOMES[rod] || ('Rodada '+rod);
+    html+='<div class="rodada-bloco"><div class="rodada-label">⚽ '+faseLabel+'</div>';
     JOGOS.filter(function(j){return j.rodada===rod;}).forEach(function(jogo){
       var r=resultadosCache[jogo.id]||{g1:'',g2:''};
       var vg1 = r.g1!=='' ? r.g1 : '';
@@ -8059,7 +8129,7 @@ function renderAdminResultados() {
       html+='</div></div>';
     });
     html+='</div>';
-  }
+  });
   el.innerHTML=html;
 
   // Event delegation — um único listener para todos os botões
@@ -8082,7 +8152,7 @@ function salvarResultadoLocal(jogoId) {
   gasSalvarResultado(jogoId, g1, g2, function(resp){
     if(resp && resp.ok){
       resultadosCache[jogoId]={g1:g1,g2:g2};
-      localStorage.setItem('bolao26_resultados', JSON.stringify(resultadosCache));
+      localStorage.setItem('bolao26mm_resultados', JSON.stringify(resultadosCache));
       statEl.textContent='Salvo: '+g1+' x '+g2;
       showToast('✅ Resultado salvo!');
     } else {
@@ -8101,7 +8171,7 @@ function limparResultado(jogoId) {
   gasSalvarResultado(jogoId, '', '', function(resp){
     if(resp && resp.ok){
       delete resultadosCache[jogoId];
-      localStorage.setItem('bolao26_resultados', JSON.stringify(resultadosCache));
+      localStorage.setItem('bolao26mm_resultados', JSON.stringify(resultadosCache));
       document.getElementById('ar_'+jogoId+'_g1').value='';
       document.getElementById('ar_'+jogoId+'_g2').value='';
       statEl.textContent='';
@@ -8141,7 +8211,7 @@ function renderAdminRanking() {
     var medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
     html+='<div class="ranking-row" data-action="detalhe-admin" data-nome="'+p.nome+'">';
     html+='<div class="rank-pos '+cls+'">'+medal+'</div>';
-    html+='<div style="flex:1"><div class="rank-nome">'+p.nome+'</div>';
+    html+='<div style="flex:1"><div class="rank-nome">'+nomeExib(p.nome)+'</div>';
     html+=(p.exatos>0?'<div style="font-size:.73rem;color:var(--ouro)">⭐ '+p.exatos+' placar(es) exato(s)</div>':'')+'</div>';
     html+='<div style="text-align:right"><div class="rank-pts">'+p.total+'</div><div class="rank-stats">'+p.feitos+'/'+JOGOS.length+'</div></div>';
     html+='</div>';
@@ -8177,7 +8247,7 @@ function renderAdminParticipantes() {
     });
     html+='<div class="ranking-row" style="cursor:default">';
     html+='<div class="rank-pos normal">#'+(i+1)+'</div>';
-    html+='<div style="flex:1;font-weight:600;">'+login+'</div>';
+    html+='<div style="flex:1;font-weight:600;">'+nomeExib(login)+'</div>';
     html+='<div style="font-size:.78rem;color:var(--texto-dim);margin-right:10px;">'+feitos+'/'+JOGOS.length+' palpites</div>';
     html+='<div class="rank-pts">'+total+'</div>';
     html+='</div>';
@@ -8208,7 +8278,7 @@ function voltarRanking() {
 function verDetalheComum(nome, voltarFn, apenasIniciados) {
   var meus=palpitesCache[nome]||{};
   var total=0;
-  document.getElementById('detalheNomeHeader').textContent=nome;
+  document.getElementById('detalheNomeHeader').textContent=nomeExib(nome);
 
   // Total sempre considera todos os jogos com resultado, independente do filtro de exibição
   JOGOS.forEach(function(j){
@@ -8254,20 +8324,13 @@ var copaPartidaFiltro = 'todos';
 
 function renderCopa() {
   var el = document.getElementById('tabCopa');
-  var btn1 = '<button class="copa-nav-btn' + (copaView==='classificacao' ? ' active' : '') + '" data-action="copa-view" data-view="classificacao">📊 Classificação</button>';
-  var btn2 = '<button class="copa-nav-btn' + (copaView==='partidas' ? ' active' : '') + '" data-action="copa-view" data-view="partidas">⚽ Partidas</button>';
-  var elC = document.getElementById('tabCopa');
-  elC.innerHTML = '<div class="copa-nav">' + btn1 + btn2 + '</div><div id="copaConteudo"></div>';
-  elC.addEventListener('click', function(e) {
+  el.innerHTML = '<div id="copaConteudo"></div>';
+  el.addEventListener('click', function(e) {
     var btn = e.target.closest('[data-action]');
     if (!btn) return;
-    var action = btn.getAttribute('data-action');
-    if (action === 'copa-view')   copaSetView(btn.getAttribute('data-view'));
-    if (action === 'copa-grupo')  copaMudaGrupo(btn.getAttribute('data-grupo'));
-    if (action === 'copa-filtro') copaFiltroPartida(btn.getAttribute('data-filtro'));
+    if (btn.getAttribute('data-action') === 'copa-filtro') copaFiltroPartida(btn.getAttribute('data-filtro'));
   });
-  if (copaView === 'classificacao') renderStandingsLocal();
-  else renderPartidasLocal();
+  renderPartidasLocal();
 }
 
 function copaSetView(view) {
@@ -8402,15 +8465,11 @@ function renderPartidasLocal() {
     {id:'todos',      label:'Todos'},
     {id:'encerrados', label:'✅ Encerrados'},
     {id:'agendados',  label:'⏰ Agendados'},
-    {id:'rodada1',    label:'Rodada 1'},
-    {id:'rodada2',    label:'Rodada 2'},
-    {id:'rodada3',    label:'Rodada 3'},
-    {id:'grupoA',     label:'Gr. A'},{id:'grupoB',label:'Gr. B'},
-    {id:'grupoC',     label:'Gr. C'},{id:'grupoD',label:'Gr. D'},
-    {id:'grupoE',     label:'Gr. E'},{id:'grupoF',label:'Gr. F'},
-    {id:'grupoG',     label:'Gr. G'},{id:'grupoH',label:'Gr. H'},
-    {id:'grupoI',     label:'Gr. I'},{id:'grupoJ',label:'Gr. J'},
-    {id:'grupoK',     label:'Gr. K'},{id:'grupoL',label:'Gr. L'}
+    {id:'rodada1',    label:'Rodada de 32'},
+    {id:'rodada2',    label:'Oitavas'},
+    {id:'rodada3',    label:'Quartas'},
+    {id:'rodada4',    label:'Semifinal'},
+    {id:'rodada5',    label:'Final'}
   ];
 
   var jogosComRes = JOGOS.filter(function(j){ var r=resultadosCache[j.id]; return r&&r.g1!==''; }).length;
@@ -8436,9 +8495,9 @@ function renderPartidasLocal() {
     if (copaPartidaFiltro==='rodada1')    return jogo.rodada===1;
     if (copaPartidaFiltro==='rodada2')    return jogo.rodada===2;
     if (copaPartidaFiltro==='rodada3')    return jogo.rodada===3;
-    // filtro por grupo: grupoA → grupo A
-    var letraFiltro = copaPartidaFiltro.replace('grupo','');
-    return jogo.grupo === letraFiltro;
+    if (copaPartidaFiltro==='rodada4')    return jogo.rodada===4;
+    if (copaPartidaFiltro==='rodada5')    return jogo.rodada===5;
+    return false;
   });
 
   if (!filtrados.length) {
@@ -8471,7 +8530,7 @@ function renderPartidasLocal() {
 
       // Meta
       html += '<div class="fixture-meta">';
-      html += '<span>GRUPO ' + jogo.grupo + ' · ' + jogo.cidade + '</span>';
+      html += '<span>' + jogo.data.slice(5).replace('-','/') + ' · ' + jogo.cidade + '</span>';
       if (temRes)       html += '<span class="fixture-status-ft">✅ Encerrado</span>';
       else if (travado) html += '<span class="fixture-status-live">● Em andamento</span>';
       else              html += '<span class="fixture-status-ns">⏰ ' + jogo.data.slice(5).replace('-','/') + ' ' + jogo.hora + 'h</span>';
@@ -8506,6 +8565,99 @@ function renderPartidasLocal() {
 function copaFiltroPartida(filtro) {
   copaPartidaFiltro = filtro;
   renderPartidasLocal();
+}
+
+// ================================================================
+// ================================================================
+// CHAVEAMENTO (BRACKET)
+// ================================================================
+function renderChaveamento() {
+  var el = document.getElementById('tabChaveamento');
+
+  // Bracket structure: left/right pairs [r32a, r32b] → r16 → qf → sf
+  var LEFT = [
+    {r32a:'M51',r32b:'M54',r16:'M65',qf:'M73',sf:'M77'},
+    {r32a:'M49',r32b:'M52',r16:'M66',qf:'M73',sf:'M77'},
+    {r32a:'M59',r32b:'M60',r16:'M67',qf:'M74',sf:'M77'},
+    {r32a:'M57',r32b:'M58',r16:'M68',qf:'M74',sf:'M77'}
+  ];
+  var RIGHT = [
+    {r32a:'M50',r32b:'M53',r16:'M69',qf:'M75',sf:'M78'},
+    {r32a:'M55',r32b:'M56',r16:'M70',qf:'M75',sf:'M78'},
+    {r32a:'M63',r32b:'M62',r16:'M71',qf:'M76',sf:'M78'},
+    {r32a:'M61',r32b:'M64',r16:'M72',qf:'M76',sf:'M78'}
+  ];
+
+  function getJ(id) { for(var i=0;i<JOGOS.length;i++) if(JOGOS[i].id===id) return JOGOS[i]; return null; }
+
+  function card(id) {
+    var j=getJ(id), r=resultadosCache[id]||null;
+    if(!j) return '<div class="bk-tbd">A definir</div>';
+    var hasR=r&&r.g1!=='';
+    var g1=hasR?parseInt(r.g1):-1, g2=hasR?parseInt(r.g2):-1;
+    var t1w=hasR&&g1>g2, t2w=hasR&&g2>g1;
+    var h='<div class="bk-card'+(hasR?' done':'')+'">'+
+      '<div class="bk-team'+(t1w?' won':hasR?' lost':'')+'">'+
+        '<img src="https://flagcdn.com/16x12/'+j.f1+'.png" onerror="this.style.display=\'none\'">'+
+        '<span class="bk-n">'+j.t1+'</span>'+(hasR?'<span class="bk-s">'+r.g1+'</span>':'')+
+      '</div>'+
+      '<div class="bk-team'+(t2w?' won':hasR?' lost':'')+'">'+
+        '<img src="https://flagcdn.com/16x12/'+j.f2+'.png" onerror="this.style.display=\'none\'">'+
+        '<span class="bk-n">'+j.t2+'</span>'+(hasR?'<span class="bk-s">'+r.g2+'</span>':'')+
+      '</div>'+
+    '</div>';
+    return h;
+  }
+
+  function r32col(side, sideClass) {
+    var h='<div class="bk-col bk-r32 '+sideClass+'"><div class="bk-col-head">Rodada de 32</div><div class="bk-slots">';
+    side.forEach(function(s){
+      h+='<div class="bk-group"><div class="bk-item">'+card(s.r32a)+'</div><div class="bk-item">'+card(s.r32b)+'</div></div>';
+    });
+    return h+'</div></div>';
+  }
+
+  function r16col(side, sideClass) {
+    var h='<div class="bk-col bk-r16 '+sideClass+'"><div class="bk-col-head">Oitavas</div><div class="bk-slots">';
+    side.forEach(function(s){ h+='<div class="bk-r16i">'+card(s.r16)+'</div>'; });
+    return h+'</div></div>';
+  }
+
+  function qfcol(side, sideClass) {
+    var ids=[], seen={};
+    side.forEach(function(s){ if(!seen[s.qf]){ids.push(s.qf);seen[s.qf]=1;} });
+    var h='<div class="bk-col bk-qf '+sideClass+'"><div class="bk-col-head">Quartas</div><div class="bk-slots">';
+    ids.forEach(function(id){ h+='<div class="bk-qfi">'+card(id)+'</div>'; });
+    return h+'</div></div>';
+  }
+
+  function sfcol(side, sideClass) {
+    var sfId=side[0].sf;
+    return '<div class="bk-col bk-sf '+sideClass+'"><div class="bk-col-head">Semi</div><div class="bk-slots"><div class="bk-sfi">'+card(sfId)+'</div></div></div>';
+  }
+
+  var html='<div class="section-title">CHAVEAMENTO</div>';
+  html+='<div class="section-sub">Copa 2026 · Mata Mata</div>';
+  html+='<div class="bracket-scroll"><div class="bracket-board">';
+
+  html+=r32col(LEFT,'lft');
+  html+=r16col(LEFT,'lft');
+  html+=qfcol(LEFT,'lft');
+  html+=sfcol(LEFT,'lft');
+
+  // Final center
+  html+='<div class="bk-col bk-finalc">';
+  html+='<div class="bk-final-lbl" style="color:var(--ouro)">🏆 FINAL</div>'+card('M80');
+  html+='<div class="bk-final-lbl" style="color:var(--texto-dim);margin-top:14px">🥉 3º Lugar</div>'+card('M79');
+  html+='</div>';
+
+  html+=sfcol(RIGHT,'rgt');
+  html+=qfcol(RIGHT,'rgt');
+  html+=r16col(RIGHT,'rgt');
+  html+=r32col(RIGHT,'rgt');
+
+  html+='</div></div>';
+  el.innerHTML=html;
 }
 
 // ================================================================
