@@ -6343,6 +6343,17 @@ main{padding:20px 16px 80px;max-width:960px;margin:0 auto;}
 /* JOGOS TAB */
 .placar-exibido{font-family:Bebas Neue,cursive;font-size:1.25rem;color:var(--amarelo);}
 .vs-txt{color:var(--texto-dim);font-size:.83rem;}
+.jogo-card.pode-ver{cursor:pointer;}
+.jogo-card.pode-ver:hover{border-color:var(--verde-claro);}
+.jogo-ver-hint{display:flex;align-items:center;justify-content:flex-end;margin-top:7px;font-size:.7rem;color:var(--texto-dim);gap:3px;user-select:none;}
+.jogos-palpites-panel{margin-top:11px;padding-top:10px;border-top:1px solid var(--borda);}
+.jp-header{font-size:.68rem;font-weight:700;color:var(--texto-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;}
+.jp-row{display:flex;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.jp-row:last-child{border-bottom:none;}
+.jp-usuario{font-size:.82rem;font-weight:600;min-width:110px;flex-shrink:0;}
+.jp-placar{font-family:Bebas Neue,cursive;font-size:1.05rem;color:var(--amarelo);flex:1;text-align:center;}
+.jp-pts{font-size:.82rem;font-weight:700;min-width:50px;text-align:right;}
+.jp-sem{color:var(--texto-dim);font-style:italic;font-size:.78rem;flex:1;text-align:center;}
 
 /* EMPTY */
 .empty-state{text-align:center;padding:50px 20px;color:var(--texto-dim);}
@@ -7298,18 +7309,18 @@ main{padding:20px 16px 80px;max-width:960px;margin:0 auto;}
     </div>
     <div class="tabs">
       <button class="tab active" onclick="showTab('palpites')">⚽ Meus Palpites</button>
+      <button class="tab" onclick="showTab('chaveamento')">🏆 Chaveamento</button>
       <button class="tab" onclick="showTab('ranking')">🏆 Ranking</button>
       <button class="tab" onclick="showTab('jogos')">📋 Jogos</button>
       <button class="tab" onclick="showTab('copa')">🌍 Copa</button>
-      <button class="tab" onclick="showTab('chaveamento')">🏆 Chaveamento</button>
     </div>
   </div>
   <main>
     <div id="tabPalpites" class="screen active"></div>
+    <div id="tabChaveamento" class="screen"></div>
     <div id="tabRanking" class="screen"></div>
     <div id="tabJogos" class="screen"></div>
     <div id="tabCopa" class="screen"></div>
-    <div id="tabChaveamento" class="screen"></div>
   </main>
 </div>
 
@@ -7513,6 +7524,11 @@ function calcPontos(palpite, resultado) {
 function jogoTravado(jogo) {
   return new Date() >= new Date(jogo.data + 'T' + jogo.hora + ':00-03:00');
 }
+function jogoAberto5min(jogo) {
+  var inicio = new Date(jogo.data + 'T' + jogo.hora + ':00-03:00');
+  return new Date() >= new Date(inicio.getTime() + 5 * 60 * 1000);
+}
+var jogoExpandidoId = null;
 
 // ================================================================
 // GOOGLE APPS SCRIPT — chamadas
@@ -7726,7 +7742,7 @@ function sairAdmin() {
 // TABS
 // ================================================================
 function showTab(tab) {
-  ['palpites','ranking','jogos','copa','chaveamento'].forEach(function(t,i){
+  ['palpites','chaveamento','ranking','jogos','copa'].forEach(function(t,i){
     var el = document.querySelectorAll('#appScreen .tab')[i];
     if (el) el.classList.toggle('active', t===tab);
     var div = document.getElementById('tab'+cap(t));
@@ -7960,6 +7976,52 @@ function renderRanking() {
 // RENDER JOGOS
 // ================================================================
 var filtroAtual='todos';
+function buildJogoPalpitesPanel(jogo) {
+  var r = resultadosCache[jogo.id];
+  var html = '<div class="jogos-palpites-panel">';
+  html += '<div class="jp-header">👁 Palpites dos participantes</div>';
+  LOGINS.forEach(function(login) {
+    var p = (palpitesCache[login] || {})[jogo.id];
+    var pts = calcPontos(p, r);
+    var ptsCls = pts === null ? 'pts-0' : pts === 7 ? 'pts-7' : pts >= 5 ? 'pts-5' : pts >= 2 ? 'pts-2' : 'pts-0';
+    html += '<div class="jp-row">';
+    html += '<div class="jp-usuario">👤 ' + nomeExib(login) + '</div>';
+    if (p && p.g1 !== '' && p.g2 !== '') {
+      html += '<div class="jp-placar">' + p.g1 + ' x ' + p.g2 + '</div>';
+      html += '<div class="jp-pts ' + ptsCls + '">' + (pts !== null ? pts + ' pts' : '—') + '</div>';
+    } else {
+      html += '<div class="jp-sem">sem palpite</div>';
+      html += '<div class="jp-pts"></div>';
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function abrirPalpitesJogo(jogoId) {
+  var jogo = null;
+  for (var i = 0; i < JOGOS.length; i++) { if (JOGOS[i].id === jogoId) { jogo = JOGOS[i]; break; } }
+  if (!jogo) return;
+  if (jogoExpandidoId === jogoId) {
+    jogoExpandidoId = null;
+    renderJogos(filtroAtual);
+    return;
+  }
+  if (!jogoAberto5min(jogo)) {
+    showToast('⏳ Palpites revelados 5 min após o início da partida');
+    return;
+  }
+  jogoExpandidoId = jogoId;
+  if (cacheCarregado) { renderJogos(filtroAtual); return; }
+  mostrarLoading('Carregando palpites...');
+  carregarTodosPalpites(function() {
+    esconderLoading();
+    cacheCarregado = true;
+    renderJogos(filtroAtual);
+  });
+}
+
 function renderJogos(grupo) {
   filtroAtual=grupo;
   var el=document.getElementById('tabJogos');
@@ -7981,7 +8043,9 @@ function renderJogos(grupo) {
     jogsF.filter(function(j){return j.rodada===rod;}).forEach(function(jogo){
       var r=resultadosCache[jogo.id];
       var travado=jogoTravado(jogo);
-      html+='<div class="jogo-card'+(travado?' locked':'')+'"><div class="jogo-meta">';
+      var podeVer=jogoAberto5min(jogo);
+      var expandido=(jogoExpandidoId===jogo.id)&&podeVer;
+      html+='<div class="jogo-card'+(travado?' locked':'')+(podeVer?' pode-ver':'')+'"'+(podeVer?' data-action="ver-palpites" data-jogo-id="'+jogo.id+'"':'')+' ><div class="jogo-meta">';
       html+='<span class="jogo-grupo-tag">'+jogo.data.slice(5).replace('-','/')+' · '+jogo.cidade+'</span>';
       html+='<span class="jogo-hora-tag">'+jogo.data.slice(5).replace('-','/')+' '+jogo.hora+'h</span></div>';
       html+='<div class="confronto">';
@@ -7990,14 +8054,19 @@ function renderJogos(grupo) {
       html+=(r&&r.g1!=='')?'<span class="placar-exibido">'+r.g1+' x '+r.g2+'</span>':'<span class="vs-txt">vs</span>';
       html+='</div>';
       html+='<div class="time-bloco direita"><img class="flag" src="https://flagcdn.com/24x18/'+jogo.f2+'.png" alt=""><span class="time-nome-txt">'+jogo.t2+'</span></div>';
-      html+='</div></div>';
+      html+='</div>';
+      if(podeVer) html+='<div class="jogo-ver-hint">'+(expandido?'▲ fechar':'▼ ver palpites')+'</div>';
+      if(expandido) html+=buildJogoPalpitesPanel(jogo);
+      html+='</div>';
     });
     html+='</div>';
   });
   el.innerHTML=html;
   el.addEventListener('click', function(e) {
-    var btn = e.target.closest('[data-action="filtro-jogo"]');
-    if (btn) renderJogos(btn.getAttribute('data-grupo'));
+    var filtro = e.target.closest('[data-action="filtro-jogo"]');
+    if (filtro) { renderJogos(filtro.getAttribute('data-grupo')); return; }
+    var card = e.target.closest('[data-action="ver-palpites"]');
+    if (card) abrirPalpitesJogo(card.getAttribute('data-jogo-id'));
   });
 }
 
