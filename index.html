@@ -6325,6 +6325,11 @@ main{padding:20px 16px 80px;max-width:960px;margin:0 auto;}
 .admin-inputs input:focus{border-color:var(--amarelo);}
 .btn-admin-save{background:var(--amarelo);color:var(--azul-escuro);font-weight:700;font-size:.8rem;padding:7px 13px;border:none;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;}.btn-admin-clear{background:none;color:var(--vermelho);font-weight:600;font-size:.78rem;padding:6px 10px;border:1px solid var(--vermelho);border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;}
 .status-admin{font-size:.77rem;color:var(--verde-claro);}
+.pen-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px solid var(--borda);}
+.pen-label{font-size:.72rem;color:var(--texto-dim);font-weight:600;white-space:nowrap;}
+.pen-btn{background:var(--azul-escuro);color:var(--texto-dim);border:1px solid var(--borda);border-radius:6px;padding:4px 10px;font-size:.76rem;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;}
+.pen-btn.active{background:var(--amarelo);color:var(--azul-escuro);border-color:var(--amarelo);font-weight:700;}
+.pen-btn:hover{border-color:var(--amarelo);}
 
 /* PALPITES VIEW (admin) */
 .palpites-view-header{display:grid;font-size:.72rem;font-weight:700;color:var(--texto-dim);text-transform:uppercase;letter-spacing:.4px;padding:8px 14px;border-bottom:1px solid var(--borda);background:rgba(0,0,0,.2);}
@@ -7436,12 +7441,12 @@ var JOGOS = [
   // Direita baixo: M63 x M62 → M71 | M61 x M64 → M72
   {id:'M65',grupo:'Oitavas de Final',rodada:2,data:'2026-07-04',hora:'18:00',f1:'py',t1:'Paraguai',f2:'fr',t2:'França',cidade:'Filadélfia'},
   {id:'M66',grupo:'Oitavas de Final',rodada:2,data:'2026-07-04',hora:'14:00',f1:'ca',t1:'Canadá',f2:'ma',t2:'Marrocos',cidade:'Houston'},
-  {id:'M67',grupo:'Oitavas de Final',rodada:2,data:'2026-07-06',hora:'16:00',f1:'un',t1:'Venc. M59',f2:'un',t2:'Venc. M60',cidade:'Dallas'},
+  {id:'M67',grupo:'Oitavas de Final',rodada:2,data:'2026-07-06',hora:'16:00',f1:'es',t1:'Espanha',f2:'pt',t2:'Portugal',cidade:'Dallas'},
   {id:'M68',grupo:'Oitavas de Final',rodada:2,data:'2026-07-06',hora:'21:00',f1:'be',t1:'Bélgica',f2:'us',t2:'Estados Unidos',cidade:'Seattle'},
   {id:'M69',grupo:'Oitavas de Final',rodada:2,data:'2026-07-05',hora:'17:00',f1:'br',t1:'Brasil',f2:'no',t2:'Noruega',cidade:'Nova York/NJ'},
   {id:'M70',grupo:'Oitavas de Final',rodada:2,data:'2026-07-05',hora:'21:00',f1:'mx',t1:'México',f2:'gb-eng',t2:'Inglaterra',cidade:'Cidade do México'},
-  {id:'M71',grupo:'Oitavas de Final',rodada:2,data:'2026-07-07',hora:'13:00',f1:'un',t1:'Venc. M63',f2:'un',t2:'Venc. M62',cidade:'Atlanta'},
-  {id:'M72',grupo:'Oitavas de Final',rodada:2,data:'2026-07-07',hora:'17:00',f1:'un',t1:'Venc. M61',f2:'un',t2:'Venc. M64',cidade:'Vancouver'},
+  {id:'M71',grupo:'Oitavas de Final',rodada:2,data:'2026-07-07',hora:'13:00',f1:'ar',t1:'Argentina',f2:'eg',t2:'Egito',cidade:'Atlanta'},
+  {id:'M72',grupo:'Oitavas de Final',rodada:2,data:'2026-07-07',hora:'17:00',f1:'ch',t1:'Suíça',f2:'co',t2:'Colômbia',cidade:'Vancouver'},
   // ── QUARTAS DE FINAL (4 jogos) ──
   {id:'M73',grupo:'Quartas de Final',rodada:3,data:'2026-07-09',hora:'17:00',f1:'un',t1:'Venc. M65',f2:'un',t2:'Venc. M66',cidade:'Boston'},
   {id:'M74',grupo:'Quartas de Final',rodada:3,data:'2026-07-11',hora:'18:00',f1:'un',t1:'Venc. M67',f2:'un',t2:'Venc. M68',cidade:'Miami'},
@@ -7454,6 +7459,8 @@ var JOGOS = [
   {id:'M79',grupo:'3º Lugar',rodada:5,data:'2026-07-18',hora:'18:00',f1:'un',t1:'Perd. M77',f2:'un',t2:'Perd. M78',cidade:'Miami'},
   {id:'M80',grupo:'Final',rodada:5,data:'2026-07-19',hora:'16:00',f1:'un',t1:'Venc. M77',f2:'un',t2:'Venc. M78',cidade:'Nova York/NJ'}
 ];
+
+var JOGOS_ORIGINAL = JSON.parse(JSON.stringify(JOGOS));
 
 var FASES_NOMES = {
   1: 'Rodada de 32',
@@ -7530,6 +7537,37 @@ function jogoAberto5min(jogo) {
 }
 var jogoExpandidoId = null;
 
+function propagarVencedores() {
+  // Restaura estado original antes de resolver (garante reversão ao limpar resultados)
+  JOGOS.forEach(function(j, i) {
+    j.t1 = JOGOS_ORIGINAL[i].t1; j.f1 = JOGOS_ORIGINAL[i].f1;
+    j.t2 = JOGOS_ORIGINAL[i].t2; j.f2 = JOGOS_ORIGINAL[i].f2;
+  });
+  var jogoMap = {};
+  JOGOS.forEach(function(j) { jogoMap[j.id] = j; });
+  // Processa em ordem: dependências menores (M65) antes das maiores (M73)
+  JOGOS.forEach(function(jogo) {
+    [['t1','f1'],['t2','f2']].forEach(function(par) {
+      var tSlot = par[0], fSlot = par[1];
+      var m = jogo[tSlot] && jogo[tSlot].match(/^(Venc|Perd)\.\s*(M\d+)$/);
+      if (!m) return;
+      var tipo = m[1], srcId = m[2];
+      var src = jogoMap[srcId];
+      var res = resultadosCache[srcId];
+      if (!src || !res || res.g1 === '' || res.g1 === undefined) return;
+      var g1 = parseInt(res.g1), g2 = parseInt(res.g2);
+      if (isNaN(g1) || isNaN(g2)) return;
+      var team1Venceu;
+      if (g1 !== g2) { team1Venceu = g1 > g2; }
+      else if (res.pen === '1' || res.pen === '2') { team1Venceu = res.pen === '1'; }
+      else { return; } // empate sem pênaltis definido
+      var useTeam1 = (tipo === 'Venc') ? team1Venceu : !team1Venceu;
+      jogo[tSlot] = useTeam1 ? src.t1 : src.t2;
+      jogo[fSlot] = useTeam1 ? src.f1 : src.f2;
+    });
+  });
+}
+
 // ================================================================
 // GOOGLE APPS SCRIPT — chamadas
 // ================================================================
@@ -7581,12 +7619,13 @@ function gasMarcarValidador(jogoIds, callback) {
 }
 
 // Salvar resultado oficial na aba RESULTADOS
-function gasSalvarResultado(jogoId, g1, g2, callback) {
+function gasSalvarResultado(jogoId, g1, g2, pen, callback) {
   gasCall({
     acao: 'salvar_resultado',
     jogo_id: jogoId,
     g1: g1,
     g2: g2,
+    pen: pen || '',
     timestamp: new Date().toLocaleString('pt-BR', {timeZone:'America/Sao_Paulo'})
   }, callback);
 }
@@ -7604,6 +7643,7 @@ window.addEventListener('load', function() {
   // Cache local de resultados (usado enquanto a planilha não responde)
   var r = localStorage.getItem('bolao26mm_resultados');
   if (r) { try { resultadosCache = JSON.parse(r); } catch(e){} }
+  propagarVencedores(); // aplica cache local ao bracket antes da resposta do servidor
   // Busca resultados oficiais da planilha (RESULTADOS), válidos para todos os usuários
   carregarResultadosDaPlanilha(function(){});
 });
@@ -7617,11 +7657,12 @@ function carregarResultadosDaPlanilha(callback) {
       var dados = resp.dados || [];
       var novo = {};
       dados.forEach(function(linha) {
-        novo[linha.jogo_id] = {g1: String(linha.g1), g2: String(linha.g2)};
+        novo[linha.jogo_id] = {g1: String(linha.g1), g2: String(linha.g2), pen: linha.pen || ''};
       });
       resultadosCache = novo;
       localStorage.setItem('bolao26mm_resultados', JSON.stringify(resultadosCache));
     }
+    propagarVencedores();
     if (callback) callback(resp);
   });
 }
@@ -7803,7 +7844,9 @@ function renderPalpites() {
       var d=new Date(data+'T12:00:00');
       var nomeDia=d.toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'});
       html+='<div class="dia-label">📅 '+nomeDia+'</div>';
-      jogsR.filter(function(j){return j.data===data;}).forEach(function(jogo){
+      var jogsData=jogsR.filter(function(j){return j.data===data;});
+      jogsData.sort(function(a,b){return a.hora.localeCompare(b.hora);});
+      jogsData.forEach(function(jogo){
         html+=buildCardPalpite(jogo, meus[jogo.id], resultadosCache[jogo.id]);
       });
     });
@@ -8040,7 +8083,9 @@ function renderJogos(grupo) {
   rodadas.forEach(function(rod){
     var faseLabel = FASES_NOMES[rod] || ('Rodada '+rod);
     html+='<div class="rodada-bloco"><div class="rodada-label">⚽ '+faseLabel+'</div>';
-    jogsF.filter(function(j){return j.rodada===rod;}).forEach(function(jogo){
+    var jogosRod=jogsF.filter(function(j){return j.rodada===rod;});
+    jogosRod.sort(function(a,b){return a.data!==b.data?a.data.localeCompare(b.data):a.hora.localeCompare(b.hora);});
+    jogosRod.forEach(function(jogo){
       var r=resultadosCache[jogo.id];
       var travado=jogoTravado(jogo);
       var podeVer=jogoAberto5min(jogo);
@@ -8133,7 +8178,9 @@ function buildAdminPalpitesView() {
   rodsAdm.forEach(function(rod){
     var faseLabel = FASES_NOMES[rod] || ('Rodada '+rod);
     html+='<div class="rodada-bloco"><div class="rodada-label">⚽ '+faseLabel+'</div>';
-    JOGOS.filter(function(j){return j.rodada===rod;}).forEach(function(jogo){
+    var jogosAdmP=JOGOS.filter(function(j){return j.rodada===rod;});
+    jogosAdmP.sort(function(a,b){return a.data!==b.data?a.data.localeCompare(b.data):a.hora.localeCompare(b.hora);});
+    jogosAdmP.forEach(function(jogo){
       var r=resultadosCache[jogo.id];
       html+='<div class="admin-card">';
       html+='<div class="admin-jogo-nome"><img class="flag-sm" src="https://flagcdn.com/20x15/'+jogo.f1+'.png" alt=""> '+jogo.t1+' x <img class="flag-sm" src="https://flagcdn.com/20x15/'+jogo.f2+'.png" alt=""> '+jogo.t2;
@@ -8170,21 +8217,24 @@ function buildAdminPalpitesView() {
 // ================================================================
 // ADMIN — RESULTADOS
 // ================================================================
+var _admResListenerOk = false;
 function renderAdminResultados() {
   var el=document.getElementById('adminTabResultados');
   var html='<div class="section-title">INSERIR RESULTADOS</div>';
-  html+='<div class="section-sub">Insira o placar real após o término de cada jogo</div>';
+  html+='<div class="section-sub">Insira o placar real após o término de cada jogo. Em caso de empate no mata-mata, selecione o vencedor nos pênaltis.</div>';
   var rodsRes=[];
   JOGOS.forEach(function(j){if(rodsRes.indexOf(j.rodada)===-1)rodsRes.push(j.rodada);});
   rodsRes.sort(function(a,b){return a-b;});
   rodsRes.forEach(function(rod){
     var faseLabel = FASES_NOMES[rod] || ('Rodada '+rod);
     html+='<div class="rodada-bloco"><div class="rodada-label">⚽ '+faseLabel+'</div>';
-    JOGOS.filter(function(j){return j.rodada===rod;}).forEach(function(jogo){
-      var r=resultadosCache[jogo.id]||{g1:'',g2:''};
-      var vg1 = r.g1!=='' ? r.g1 : '';
-      var vg2 = r.g2!=='' ? r.g2 : '';
-      var salvo = r.g1!=='' ? 'Salvo: '+r.g1+' x '+r.g2 : '';
+    var jogosAdmR=JOGOS.filter(function(j){return j.rodada===rod;});
+    jogosAdmR.sort(function(a,b){return a.data!==b.data?a.data.localeCompare(b.data):a.hora.localeCompare(b.hora);});
+    jogosAdmR.forEach(function(jogo){
+      var r=resultadosCache[jogo.id]||{g1:'',g2:'',pen:''};
+      var vg1=r.g1!==''?r.g1:'', vg2=r.g2!==''?r.g2:'';
+      var curPen=r.pen||'';
+      var salvo=r.g1!==''?'Salvo: '+r.g1+' x '+r.g2+(curPen?' (P'+curPen+')':''):'';
       html+='<div class="admin-card">';
       html+='<div class="admin-jogo-nome"><img class="flag-sm" src="https://flagcdn.com/20x15/'+jogo.f1+'.png" alt=""> '+jogo.t1+' x <img class="flag-sm" src="https://flagcdn.com/20x15/'+jogo.f2+'.png" alt=""> '+jogo.t2;
       html+=' <span style="font-size:.7rem;color:var(--texto-dim)">'+jogo.data.slice(5).replace('-','/')+' '+jogo.hora+'h</span></div>';
@@ -8195,38 +8245,64 @@ function renderAdminResultados() {
       html+='<button class="btn-admin-save" data-jogo="'+jogo.id+'" data-action="salvar">✅ Salvar</button>';
       html+='<button class="btn-admin-clear" data-jogo="'+jogo.id+'" data-action="limpar">🗑️ Limpar</button>';
       html+='<span id="adm_st_'+jogo.id+'" class="status-admin">'+salvo+'</span>';
-      html+='</div></div>';
+      html+='</div>';
+      if(jogo.rodada>=2){
+        html+='<div class="pen-row">';
+        html+='<span class="pen-label">🥅 Pênaltis (empate):</span>';
+        html+='<button class="pen-btn'+(curPen==='1'?' active':'')+'" data-action="pen-sel" data-jogo="'+jogo.id+'" data-val="1">'+jogo.t1+'</button>';
+        html+='<button class="pen-btn'+(curPen==='2'?' active':'')+'" data-action="pen-sel" data-jogo="'+jogo.id+'" data-val="2">'+jogo.t2+'</button>';
+        html+='<button class="pen-btn'+(curPen===''?' active':'')+'" data-action="pen-sel" data-jogo="'+jogo.id+'" data-val="">Sem pênaltis</button>';
+        html+='<input type="hidden" id="pen_val_'+jogo.id+'" value="'+curPen+'">';
+        html+='</div>';
+      }
+      html+='</div>';
     });
     html+='</div>';
   });
   el.innerHTML=html;
 
-  // Event delegation — um único listener para todos os botões
-  el.addEventListener('click', function(e) {
-    var btn = e.target.closest('button[data-action]');
-    if (!btn) return;
-    var jogoId = btn.getAttribute('data-jogo');
-    var action = btn.getAttribute('data-action');
-    if (action === 'salvar') salvarResultadoLocal(jogoId);
-    if (action === 'limpar') limparResultado(jogoId);
-  });
+  if(!_admResListenerOk){
+    el.addEventListener('click', function(e) {
+      var btn = e.target.closest('button[data-action]');
+      if (!btn) return;
+      var jogoId = btn.getAttribute('data-jogo');
+      var action = btn.getAttribute('data-action');
+      if (action === 'salvar') salvarResultadoLocal(jogoId);
+      if (action === 'limpar') limparResultado(jogoId);
+      if (action === 'pen-sel') {
+        var val = btn.getAttribute('data-val');
+        var penInput = document.getElementById('pen_val_'+jogoId);
+        if (penInput) penInput.value = val;
+        var allPenBtns = document.querySelectorAll('.pen-btn[data-jogo="'+jogoId+'"]');
+        allPenBtns.forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-val')===val); });
+      }
+    });
+    _admResListenerOk = true;
+  }
 }
 
 function salvarResultadoLocal(jogoId) {
   var g1=document.getElementById('ar_'+jogoId+'_g1').value;
   var g2=document.getElementById('ar_'+jogoId+'_g2').value;
   if(g1===''||g2===''){showToast('⚠️ Preencha os dois gols!',true);return;}
+  var jogo=null; for(var i=0;i<JOGOS.length;i++){if(JOGOS[i].id===jogoId){jogo=JOGOS[i];break;}}
+  var pen='';
+  if(jogo&&jogo.rodada>=2&&parseInt(g1)===parseInt(g2)){
+    var penInput=document.getElementById('pen_val_'+jogoId);
+    pen=penInput?penInput.value:'';
+    if(!pen){showToast('⚠️ Empate no mata-mata! Selecione o vencedor nos pênaltis.',true);return;}
+  }
   var statEl=document.getElementById('adm_st_'+jogoId);
   statEl.textContent='Salvando...';
-  gasSalvarResultado(jogoId, g1, g2, function(resp){
-    if(resp && resp.ok){
-      resultadosCache[jogoId]={g1:g1,g2:g2};
-      localStorage.setItem('bolao26mm_resultados', JSON.stringify(resultadosCache));
-      statEl.textContent='Salvo: '+g1+' x '+g2;
+  gasSalvarResultado(jogoId,g1,g2,pen,function(resp){
+    if(resp&&resp.ok){
+      resultadosCache[jogoId]={g1:g1,g2:g2,pen:pen};
+      localStorage.setItem('bolao26mm_resultados',JSON.stringify(resultadosCache));
+      propagarVencedores();
+      renderAdminResultados();
       showToast('✅ Resultado salvo!');
     } else {
-      statEl.textContent='';
-      showToast('❌ Erro ao salvar: '+(resp&&resp.erro?resp.erro:'falha na conexão'), true);
+      showToast('❌ Erro ao salvar: '+(resp&&resp.erro?resp.erro:'falha na conexão'),true);
     }
   });
 }
@@ -8237,17 +8313,16 @@ function limparResultado(jogoId) {
   }
   var statEl=document.getElementById('adm_st_'+jogoId);
   statEl.textContent='Removendo...';
-  gasSalvarResultado(jogoId, '', '', function(resp){
-    if(resp && resp.ok){
+  gasSalvarResultado(jogoId,'','','',function(resp){
+    if(resp&&resp.ok){
       delete resultadosCache[jogoId];
-      localStorage.setItem('bolao26mm_resultados', JSON.stringify(resultadosCache));
-      document.getElementById('ar_'+jogoId+'_g1').value='';
-      document.getElementById('ar_'+jogoId+'_g2').value='';
-      statEl.textContent='';
+      localStorage.setItem('bolao26mm_resultados',JSON.stringify(resultadosCache));
+      propagarVencedores();
+      renderAdminResultados();
       showToast('🗑️ Resultado removido!');
     } else {
       statEl.textContent='Salvo: '+resultadosCache[jogoId].g1+' x '+resultadosCache[jogoId].g2;
-      showToast('❌ Erro ao remover: '+(resp&&resp.erro?resp.erro:'falha na conexão'), true);
+      showToast('❌ Erro ao remover: '+(resp&&resp.erro?resp.erro:'falha na conexão'),true);
     }
   });
 }
